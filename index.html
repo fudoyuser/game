@@ -28,6 +28,9 @@
 .mode.eps:hover { border-color: var(--no); }
 .tag.eps { background: var(--no); color: var(--card); }
 .tag.terms { background: var(--ok); color: var(--card); }
+.mode.skills { border-left: 4px solid var(--skill); }
+.mode.skills:hover { border-color: var(--skill); }
+.tag.skills { background: var(--skill); color: var(--card); }
 [data-film="lien-quan-mobile"] {
   --bg: #0a1024;
   --bg-art: radial-gradient(800px 420px at 85% -10%, #e9b94940, transparent 70%), radial-gradient(600px 420px at 0% 100%, #2f6bff33, transparent 70%);
@@ -46,6 +49,7 @@
   --display: "Oswald", "Arial Narrow", sans-serif;
   color-scheme: dark;
 }
+body, .film { --skill: color-mix(in srgb, var(--accent) 45%, var(--ok)); }
 * { box-sizing: border-box; }
 html { background: var(--bg); }
 body {
@@ -210,6 +214,10 @@ const FILMS = [
       ["Wikipedia: Multiplayer online battle arena", "https://en.wikipedia.org/wiki/Multiplayer_online_battle_arena"],
       ["Wikipedia: Glossary of video game terms", "https://en.wikipedia.org/wiki/Glossary_of_video_game_terms"]
     ],
+    skillSources: [
+      ["Trang chủ Liên Quân Mobile", "https://lienquan.garena.vn/"],
+      ["Wikipedia: Multiplayer online battle arena", "https://en.wikipedia.org/wiki/Multiplayer_online_battle_arena"]
+    ],
     emoSources: [
       ["Wikipedia: Arena of Valor (đón nhận)", "https://en.wikipedia.org/wiki/Arena_of_Valor#Reception"]
     ],
@@ -254,6 +262,18 @@ const FILMS = [
       { q: "\"Last hit\" là gì?", a: "Ra đòn kết liễu để nhận vàng từ lính hoặc quái", w: ["Đòn đầu tiên trong trận", "Chiêu cuối", "Lần chơi cuối"], e: "Last hit chuẩn giúp kiếm vàng nhanh hơn đối thủ cùng đường." },
       { q: "\"GG\" cuối trận nghĩa là gì?", a: "Good Game: lời chào, ghi nhận trận đấu hay", w: ["Gà Gáy", "Go Go: đánh tiếp", "Get Gold"], e: "GG là phép lịch sự. Gõ GG khi trận chưa xong thường là ý muốn đầu hàng." }
     ],
+    skills: [
+      { q: "Tướng đi rừng của địch biến mất khỏi bản đồ, bạn đang đi đường nên làm gì?", a: "Chơi cẩn thận, lùi gần trụ và báo cho đồng đội", w: ["Lao lên ép trụ địch", "Vào rừng địch tìm", "Bỏ qua, tiếp tục farm sát trụ địch"], e: "Đi rừng biến mất thường là đang chuẩn bị gank. Quan sát bản đồ nhỏ là kỹ năng giữ mạng quan trọng nhất." },
+      { q: "Vì sao nên thường xuyên nhìn bản đồ nhỏ?", a: "Để biết vị trí địch, đồng đội và kịp hỗ trợ hoặc né gank", w: ["Để tăng sát thương", "Vì game bắt buộc", "Để mua đồ nhanh hơn"], e: "Người chơi giỏi liếc bản đồ nhỏ vài giây một lần." },
+      { q: "Muốn có nhiều vàng hơn đối thủ cùng đường, bạn nên tập kỹ năng gì?", a: "Last hit: ra đòn kết liễu lính đúng lúc", w: ["Đánh tướng địch liên tục", "Đứng trong bụi cả trận", "Về nhà thường xuyên"], e: "Chỉ đòn kết liễu mới cho đủ vàng từ lính, nên last hit đều tay tạo lợi thế lớn." },
+      { q: "Trong giao tranh tổng, xạ thủ nên đứng ở đâu?", a: "Phía sau đỡ đòn, giữ khoảng cách và gây sát thương liên tục", w: ["Đứng đầu đội hình mở giao tranh", "Đứng xa ngoài tầm đánh", "Một mình đi đẩy đường khác"], e: "Xạ thủ máu mỏng nhưng sát thương cao, cần được đỡ đòn và trợ thủ bảo vệ." },
+      { q: "Vừa thắng một pha giao tranh lớn, đội nên làm gì tiếp?", a: "Tận dụng lợi thế đẩy trụ hoặc lấy mục tiêu lớn", w: ["Ai về nhà nấy farm", "Đuổi theo địch vào tận nhà chính khi máu thấp", "Đứng yên chờ địch hồi sinh"], e: "Lợi thế quân số chỉ có giá trị khi được biến thành trụ và mục tiêu." },
+      { q: "Đội địch có nhiều pháp sư gây sát thương phép, bạn nên lên đồ thế nào?", a: "Thêm trang bị giáp phép", w: ["Chỉ lên giáp vật lý", "Bỏ hết đồ phòng thủ", "Không đổi gì"], e: "Lên đồ linh hoạt theo đội hình địch là khác biệt giữa người chơi trung bình và cao thủ." },
+      { q: "Đội đang bị dẫn trước nhiều, cách chơi hợp lý là gì?", a: "Thủ trụ, farm an toàn và chờ địch mắc sai lầm", w: ["Một mình lao vào 5 người", "Đầu hàng ngay", "Chia nhau đi đẩy lẻ khắp nơi"], e: "Đội dẫn trước dễ chủ quan; một pha bắt lẻ đúng lúc có thể lật kèo." },
+      { q: "Nên dùng Tốc biến thế nào cho hiệu quả?", a: "Giữ để thoát hiểm hoặc kết hợp chiêu áp sát", w: ["Dùng ngay khi hồi xong cho vui", "Chỉ dùng để chạy về nhà", "Không bao giờ dùng"], e: "Tốc biến hồi lâu, dùng phí một lần là mất một mạng tiềm năng." },
+      { q: "Cách phối hợp với đồng đội nhanh nhất trong trận là gì?", a: "Dùng tín hiệu nhanh: tấn công, rút lui, tập trung", w: ["Gõ chữ thật dài", "Không nói gì", "Thoát game để nhắn tin"], e: "Tín hiệu nhanh không làm bạn mất tầm nhìn trận đấu như khi gõ chữ." },
+      { q: "Khi đẩy trụ địch, vì sao nên đi kèm lính?", a: "Để trụ bắn lính thay vì bắn tướng của bạn", w: ["Vì lính gây sát thương lớn nhất", "Vì không có lính thì trụ bất tử", "Không cần lính"], e: "Trụ ưu tiên bắn lính trong tầm, cho bạn thời gian an toàn để gây sát thương." }
+    ],
     emotions: [
       { q: "Cảm giác phổ biến nhất khi có đồng đội AFK giữa trận rank là gì?", a: "Bực bội, cảm thấy mất điểm oan", w: ["Vui mừng", "Không ai để ý", "Thấy dễ thắng hơn"], e: "Đây là nỗi ám ảnh lớn nhất của người chơi xếp hạng." },
       { q: "Khi game ra trang phục mới cho tướng yêu thích, nhiều người thường làm gì?", a: "Tích Quân Huy hoặc săn sự kiện để sở hữu", w: ["Gỡ game", "Đổi sang tướng khác", "Không quan tâm"], e: "Trang phục là phần được cộng đồng bàn tán nhiều nhất mỗi đợt cập nhật." },
@@ -284,6 +304,10 @@ const FILMS = [
     termSources: [
       ["Wikipedia: Battle royale game", "https://en.wikipedia.org/wiki/Battle_royale_game"],
       ["Wikipedia: PUBG Mobile", "https://en.wikipedia.org/wiki/PUBG_Mobile"]
+    ],
+    skillSources: [
+      ["PUBG Wiki (Fandom)", "https://pubg.fandom.com/wiki/PUBG_Wiki"],
+      ["Wikipedia: PUBG: Battlegrounds", "https://en.wikipedia.org/wiki/PUBG:_Battlegrounds"]
     ],
     emoSources: [
       ["Wikipedia: PUBG: Battlegrounds (đón nhận)", "https://en.wikipedia.org/wiki/PUBG:_Battlegrounds#Reception"]
@@ -329,6 +353,18 @@ const FILMS = [
       { q: "\"Loot\" là gì?", a: "Nhặt vũ khí, trang bị trên bản đồ", w: ["Bắn tỉa", "Lái xe", "Nhảy dù"], e: "Đầu trận ai loot nhanh hơn thường có lợi thế giao tranh." },
       { q: "\"Third party\" (bên thứ ba) là tình huống gì?", a: "Một đội tấn công hai đội đang đánh nhau", w: ["Mời thêm bạn vào đội", "Đổi bản đồ", "Hòa trận"], e: "Chờ hai đội đánh nhau rồi \"ngư ông đắc lợi\" là chiến thuật kinh điển." }
     ],
+    skills: [
+      { q: "Người mới nên chọn điểm nhảy như thế nào?", a: "Nơi ít người, hơi xa đường bay để nhặt đồ an toàn", w: ["Luôn nhảy Pochinki", "Nhảy ngay khi máy bay cất cánh vào giữa đám đông", "Nhảy xuống biển"], e: "Có đồ đầy đủ rồi mới giao tranh giúp người mới sống lâu và học được nhiều hơn." },
+      { q: "Muốn đáp đất nhanh nhất khi nhảy dù, bạn nên làm gì?", a: "Chúc đầu lao thẳng xuống trước khi mở dù", w: ["Mở dù ngay khi nhảy", "Bay ngang thật xa", "Đợi đến cuối đường bay"], e: "Đáp nhanh hơn đối thủ vài giây là có súng trước, rất quan trọng ở điểm đông người." },
+      { q: "Cách kiểm soát độ giật khi xả đạn liên tục là gì?", a: "Kéo tâm ngắm ngược xuống, gắn tay cầm và bù giật", w: ["Nhảy liên tục khi bắn", "Bắn mà không ngắm", "Bỏ hết phụ kiện"], e: "Tập kéo tâm ở bãi tập là cách nhanh nhất để bắn trúng ở tầm trung." },
+      { q: "Bị bắn tỉa giữa bãi trống, bạn nên làm gì?", a: "Chạy zigzag và tìm vật cản gần nhất", w: ["Đứng yên băng bó", "Chạy thẳng một đường", "Nằm xuống giữa bãi"], e: "Di chuyển khó đoán khiến tay bắn tỉa khó ngắm trúng." },
+      { q: "Chạy bo thế nào cho an toàn?", a: "Di chuyển sớm, chiếm vị trí tốt trong vùng an toàn trước người khác", w: ["Đợi bo sát lưng mới chạy", "Ở ngoài bo hồi máu", "Đi đường đông người cho nhanh"], e: "Vào bo muộn nghĩa là phải băng qua những đội đã chiếm sẵn chỗ nấp." },
+      { q: "Vì sao đeo tai nghe giúp chơi PUBG tốt hơn?", a: "Nghe rõ tiếng bước chân, tiếng súng và hướng của chúng", w: ["Tăng tốc độ chạy", "Tăng sát thương", "Hồi máu nhanh hơn"], e: "Âm thanh định hướng là nguồn thông tin quan trọng không kém tầm nhìn." },
+      { q: "Nghiêng người (peek) khi bắn từ sau vật cản có lợi gì?", a: "Lộ ít thân hình hơn, khó bị bắn trúng", w: ["Bắn nhanh gấp đôi", "Đạn xuyên tường", "Không bị mất máu"], e: "Peek trái phải từ sau tường, cây hay xe là kỹ năng cơ bản của đấu súng." },
+      { q: "Muốn cứu đồng đội bị gục giữa bãi trống, bạn nên làm gì trước?", a: "Ném lựu đạn khói để che tầm nhìn địch", w: ["Chạy thẳng tới cứu ngay", "Bỏ mặc đồng đội", "Ném lựu đạn nổ vào đồng đội"], e: "Khói là vật phẩm cứu mạng cả đội, nên luôn mang theo vài quả." },
+      { q: "Bắn tỉa một mục tiêu đang chạy ở xa, bạn cần làm gì?", a: "Ngắm đón trước hướng di chuyển và tính độ rơi của đạn", w: ["Ngắm thẳng vào người", "Ngắm phía sau mục tiêu", "Bắn lên trời"], e: "Trong PUBG đạn có thời gian bay và rơi theo khoảng cách, không trúng ngay lập tức." },
+      { q: "Vừa đáp đất, nên ưu tiên nhặt gì trước?", a: "Súng, giáp và mũ", w: ["Phụ kiện ống ngắm", "Trang phục", "Bình xăng"], e: "Có súng và đồ bảo hộ mới sống sót được giao tranh đầu tiên; phụ kiện có thể tìm sau." }
+    ],
     emotions: [
       { q: "Khoảnh khắc lên top 1 lần đầu tiên thường khiến người chơi cảm thấy thế nào?", a: "Run tay, vỡ òa và nhớ mãi", w: ["Thờ ơ", "Hối hận", "Thấy quá dễ"], e: "Nhiều người chụp màn hình \"Winner winner chicken dinner\" đầu tiên để khoe." },
       { q: "Vì sao những phút cuối vòng bo thường rất căng thẳng?", a: "Vùng an toàn nhỏ, chỉ một sai lầm là bị loại", w: ["Vì game bị giật", "Vì hết đạn", "Vì không còn ai"], e: "Tiếng tim đập trong tai nghe là trải nghiệm chung của game thủ PUBG." },
@@ -347,14 +383,15 @@ const MODES = {
   facts: { suffix: "", label: "Kiến thức game", list: (f) => f.questions, src: (f) => f.sources },
   eps: { suffix: "--tung-tap", label: "Chi tiết trong game", list: (f) => f.episodes || [], src: (f) => f.epSources || [] },
   terms: { suffix: "--y-nghia", label: "Thuật ngữ game thủ", list: (f) => f.terms || [], src: (f) => f.termSources || [] },
+  skills: { suffix: "--ky-nang", label: "Kỹ năng chơi", list: (f) => f.skills || [], src: (f) => f.skillSources || [] },
   emo: { suffix: "--cam-xuc", label: "Cảm xúc game thủ", list: (f) => f.emotions || [], src: (f) => f.emoSources || [] },
   all: {
     suffix: "--tong-hop", label: "Ôn tập tổng hợp",
     list: (f) => {
-      const parts = ["facts", "eps", "terms", "emo"].filter((m) => MODES[m].list(f).length);
+      const parts = ["facts", "eps", "terms", "skills", "emo"].filter((m) => MODES[m].list(f).length);
       return parts.length > 1 ? parts.flatMap((m) => MODES[m].list(f).map((q) => ({ ...q, cat: labelOf(f, m) }))) : [];
     },
-    src: (f) => [...f.sources, ...(f.epSources || []), ...(f.termSources || []), ...(f.emoSources || [])].filter((s, i, a) => a.findIndex((x) => x[1] === s[1]) === i)
+    src: (f) => [...f.sources, ...(f.epSources || []), ...(f.termSources || []), ...(f.skillSources || []), ...(f.emoSources || [])].filter((s, i, a) => a.findIndex((x) => x[1] === s[1]) === i)
   }
 };
 
@@ -368,7 +405,7 @@ const best = {
 const labelOf = (f, m) => (m === "eps" && f.epLabel) || MODES[m].label;
 const keyOf = (film, mode) => film.id + MODES[mode].suffix;
 function parseKey(key) {
-  for (const mode of ["all", "eps", "emo", "terms", "facts"]) {
+  for (const mode of ["all", "eps", "emo", "skills", "terms", "facts"]) {
     const sfx = MODES[mode].suffix;
     if (sfx && !key.endsWith(sfx)) continue;
     const film = FILMS.find((f) => f.id === key.slice(0, key.length - sfx.length));
@@ -508,6 +545,12 @@ function verdict(r, mode) {
     if (r >= .5) return "Khá ổn. Vào kênh chat cộng đồng thêm vài hôm là thạo.";
     return "Còn nhiều tiếng lóng đang chờ bạn học.";
   }
+  if (mode === "skills") {
+    if (r === 1) return "Kỹ năng hoàn hảo. Bạn chơi như tuyển thủ chuyên nghiệp.";
+    if (r >= .75) return "Rất chắc tay. Đồng đội nào cũng muốn ghép cặp với bạn.";
+    if (r >= .5) return "Có nền tảng tốt. Áp dụng vài mẹo bên dưới là lên trình ngay.";
+    return "Đọc kỹ phần giải thích rồi vào game luyện thêm nhé.";
+  }
   if (mode === "emo") {
     if (r === 1) return "Bạn hiểu game thủ đến từng nhịp tim.";
     if (r >= .75) return "Bạn rất hiểu cộng đồng người chơi.";
@@ -548,7 +591,7 @@ function renderFoot() {
   const src = state ? MODES[state.mode].src(state.film) : [];
   $("#foot").innerHTML = state
     ? `Nguồn dữ kiện: ${src.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(", ")}.`
-    : `Mỗi game có bốn bộ câu hỏi (kiến thức game, chi tiết trong game, thuật ngữ game thủ, cảm xúc game thủ) và một mục ôn tập tổng hợp gộp tất cả. Kỷ lục chỉ lưu trên trình duyệt của bạn.`;
+    : `Mỗi game có năm bộ câu hỏi (kiến thức game, chi tiết trong game, thuật ngữ game thủ, kỹ năng chơi, cảm xúc game thủ) và một mục ôn tập tổng hợp gộp tất cả. Kỷ lục chỉ lưu trên trình duyệt của bạn.`;
 }
 
 function route() {
