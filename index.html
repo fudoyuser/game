@@ -31,6 +31,10 @@
 .mode.skills { border-left: 4px solid var(--skill); }
 .mode.skills:hover { border-color: var(--skill); }
 .tag.skills { background: var(--skill); color: var(--card); }
+.skillbox { display: grid; gap: 6px; padding: 10px; border: 1.5px dashed var(--skill); border-radius: 14px; }
+.skillbox > .label { color: var(--skill); }
+.mode.sub { padding: 7px 12px; border-left-width: 3px; }
+.mode.sub .mode-name { font-size: 14px; font-weight: 500; }
 [data-film="lien-quan-mobile"] {
   --bg: #0a1024;
   --bg-art: radial-gradient(800px 420px at 85% -10%, #e9b94940, transparent 70%), radial-gradient(600px 420px at 0% 100%, #2f6bff33, transparent 70%);
@@ -262,17 +266,65 @@ const FILMS = [
       { q: "\"Last hit\" là gì?", a: "Ra đòn kết liễu để nhận vàng từ lính hoặc quái", w: ["Đòn đầu tiên trong trận", "Chiêu cuối", "Lần chơi cuối"], e: "Last hit chuẩn giúp kiếm vàng nhanh hơn đối thủ cùng đường." },
       { q: "\"GG\" cuối trận nghĩa là gì?", a: "Good Game: lời chào, ghi nhận trận đấu hay", w: ["Gà Gáy", "Go Go: đánh tiếp", "Get Gold"], e: "GG là phép lịch sự. Gõ GG khi trận chưa xong thường là ý muốn đầu hàng." }
     ],
-    skills: [
-      { q: "Tướng đi rừng của địch biến mất khỏi bản đồ, bạn đang đi đường nên làm gì?", a: "Chơi cẩn thận, lùi gần trụ và báo cho đồng đội", w: ["Lao lên ép trụ địch", "Vào rừng địch tìm", "Bỏ qua, tiếp tục farm sát trụ địch"], e: "Đi rừng biến mất thường là đang chuẩn bị gank. Quan sát bản đồ nhỏ là kỹ năng giữ mạng quan trọng nhất." },
-      { q: "Vì sao nên thường xuyên nhìn bản đồ nhỏ?", a: "Để biết vị trí địch, đồng đội và kịp hỗ trợ hoặc né gank", w: ["Để tăng sát thương", "Vì game bắt buộc", "Để mua đồ nhanh hơn"], e: "Người chơi giỏi liếc bản đồ nhỏ vài giây một lần." },
-      { q: "Muốn có nhiều vàng hơn đối thủ cùng đường, bạn nên tập kỹ năng gì?", a: "Last hit: ra đòn kết liễu lính đúng lúc", w: ["Đánh tướng địch liên tục", "Đứng trong bụi cả trận", "Về nhà thường xuyên"], e: "Chỉ đòn kết liễu mới cho đủ vàng từ lính, nên last hit đều tay tạo lợi thế lớn." },
-      { q: "Trong giao tranh tổng, xạ thủ nên đứng ở đâu?", a: "Phía sau đỡ đòn, giữ khoảng cách và gây sát thương liên tục", w: ["Đứng đầu đội hình mở giao tranh", "Đứng xa ngoài tầm đánh", "Một mình đi đẩy đường khác"], e: "Xạ thủ máu mỏng nhưng sát thương cao, cần được đỡ đòn và trợ thủ bảo vệ." },
-      { q: "Vừa thắng một pha giao tranh lớn, đội nên làm gì tiếp?", a: "Tận dụng lợi thế đẩy trụ hoặc lấy mục tiêu lớn", w: ["Ai về nhà nấy farm", "Đuổi theo địch vào tận nhà chính khi máu thấp", "Đứng yên chờ địch hồi sinh"], e: "Lợi thế quân số chỉ có giá trị khi được biến thành trụ và mục tiêu." },
-      { q: "Đội địch có nhiều pháp sư gây sát thương phép, bạn nên lên đồ thế nào?", a: "Thêm trang bị giáp phép", w: ["Chỉ lên giáp vật lý", "Bỏ hết đồ phòng thủ", "Không đổi gì"], e: "Lên đồ linh hoạt theo đội hình địch là khác biệt giữa người chơi trung bình và cao thủ." },
-      { q: "Đội đang bị dẫn trước nhiều, cách chơi hợp lý là gì?", a: "Thủ trụ, farm an toàn và chờ địch mắc sai lầm", w: ["Một mình lao vào 5 người", "Đầu hàng ngay", "Chia nhau đi đẩy lẻ khắp nơi"], e: "Đội dẫn trước dễ chủ quan; một pha bắt lẻ đúng lúc có thể lật kèo." },
-      { q: "Nên dùng Tốc biến thế nào cho hiệu quả?", a: "Giữ để thoát hiểm hoặc kết hợp chiêu áp sát", w: ["Dùng ngay khi hồi xong cho vui", "Chỉ dùng để chạy về nhà", "Không bao giờ dùng"], e: "Tốc biến hồi lâu, dùng phí một lần là mất một mạng tiềm năng." },
-      { q: "Cách phối hợp với đồng đội nhanh nhất trong trận là gì?", a: "Dùng tín hiệu nhanh: tấn công, rút lui, tập trung", w: ["Gõ chữ thật dài", "Không nói gì", "Thoát game để nhắn tin"], e: "Tín hiệu nhanh không làm bạn mất tầm nhìn trận đấu như khi gõ chữ." },
-      { q: "Khi đẩy trụ địch, vì sao nên đi kèm lính?", a: "Để trụ bắn lính thay vì bắn tướng của bạn", w: ["Vì lính gây sát thương lớn nhất", "Vì không có lính thì trụ bất tử", "Không cần lính"], e: "Trụ ưu tiên bắn lính trong tầm, cho bạn thời gian an toàn để gây sát thương." }
+    skillGroups: [
+      { id: "thao-tac", label: "Thao tác tay", questions: [
+        { q: "Cách cầm máy phổ biến của người chơi Liên Quân là gì?", a: "Hai ngón cái: trái điều khiển di chuyển, phải bấm chiêu và đánh thường", w: ["Một ngón trỏ bấm tất cả", "Chỉ dùng tay phải", "Đặt máy xuống bàn bấm bằng bút"], e: "Hai ngón cái là cách cầm cơ bản. Một số người chơi giỏi dùng thêm ngón trỏ để mở bản đồ hoặc dùng phép bổ trợ." },
+        { q: "Với chiêu định hướng (kỹ năng phóng theo hướng), cách dùng chính xác hơn là gì?", a: "Giữ và kéo nút chiêu để ngắm hướng rồi mới thả", w: ["Bấm thật nhanh nhiều lần", "Chỉ bấm khi đứng yên", "Bấm khi chưa thấy địch"], e: "Bấm nhanh thì chiêu tự nhắm theo game, còn kéo để ngắm cho phép bạn đón đầu hướng địch chạy." },
+        { q: "Lỡ kéo chiêu ra mà thấy không nên dùng nữa, bạn làm gì?", a: "Kéo ngón tay vào ô hủy kỹ năng rồi thả", w: ["Thả tay ở bất kỳ đâu", "Thoát game", "Bấm nút về nhà"], e: "Hủy chiêu giúp bạn không lãng phí kỹ năng quan trọng vào chỗ trống." },
+        { q: "Vì sao nên chỉnh ưu tiên mục tiêu (ví dụ: máu thấp nhất) trong cài đặt?", a: "Để đánh thường và chiêu tự nhắm đúng kẻ địch bạn muốn hạ", w: ["Để tăng sát thương", "Để chạy nhanh hơn", "Để đổi tướng giữa trận"], e: "Ưu tiên máu thấp giúp kết liễu nhanh; xạ thủ hay dùng cách này trong giao tranh." },
+        { q: "\"Combo\" chiêu là gì?", a: "Tung các chiêu theo thứ tự hợp lý để gây sát thương và khống chế tối đa", w: ["Dùng cùng lúc mọi nút", "Mua hai món đồ một lúc", "Ghép hai tướng thành một"], e: "Mỗi tướng có combo riêng; tập ở chế độ luyện tập trước khi vào trận xếp hạng." },
+        { q: "Xen đòn đánh thường giữa các chiêu có tác dụng gì?", a: "Tận dụng hiệu ứng cường hóa đòn đánh, tăng tổng sát thương", w: ["Làm chậm hồi chiêu", "Không có tác dụng gì", "Làm tướng mất máu"], e: "Nhiều tướng có nội tại hoặc trang bị cường hóa đòn đánh kế tiếp sau khi dùng chiêu." },
+        { q: "Muốn nhìn xa phía trước mà không di chuyển tướng, bạn dùng cách nào?", a: "Kéo màn hình hoặc chạm vào bản đồ nhỏ để xem", w: ["Đi thẳng tới đó", "Phóng to điện thoại", "Không có cách nào"], e: "Xem nhanh bản đồ giúp nắm tình hình đường khác mà vẫn an toàn." },
+        { q: "Trước khi vào trận xếp hạng với tướng mới, bạn nên làm gì?", a: "Luyện tay ở chế độ luyện tập hoặc đấu thường", w: ["Vào rank thử luôn", "Chỉ đọc mô tả chiêu", "Mua trang phục là đủ"], e: "Quen tầm chiêu và combo sẽ giúp bạn không làm hại đội trong trận thật." }
+      ]},
+      { id: "di-chuyen", label: "Di chuyển & né chiêu", questions: [
+        { q: "\"Thả diều\" (kite) là kỹ thuật di chuyển gì?", a: "Đánh một đòn rồi lùi lại, giữ khoảng cách với địch cận chiến", w: ["Đứng yên đánh liên tục", "Chạy thẳng vào địch", "Đi vòng quanh trụ"], e: "Xạ thủ và pháp sư tầm xa kite để đối thủ cận chiến không chạm được mình." },
+        { q: "Né chiêu định hướng của địch hiệu quả nhất bằng cách nào?", a: "Đổi hướng di chuyển liên tục, đi chéo thay vì đi thẳng", w: ["Đứng yên", "Đi thẳng về phía người bắn", "Chạy theo một đường thẳng"], e: "Chiêu định hướng bay theo đường thẳng; di chuyển khó đoán khiến địch khó đón đầu." },
+        { q: "Khi đi đường, đứng sau lính nhà có lợi gì?", a: "Lính chặn các chiêu định hướng trúng mục tiêu đầu tiên", w: ["Lính hồi máu cho bạn", "Tăng tốc chạy", "Không có lợi gì"], e: "Nhiều chiêu dừng lại khi trúng lính, nên lính là lá chắn tự nhiên." },
+        { q: "Vì sao không nên tự đi kiểm tra bụi cỏ không có tầm nhìn (face-check)?", a: "Có thể có địch phục sẵn, bạn bị hạ trước khi kịp phản ứng", w: ["Vì bụi cỏ gây sát thương", "Vì bụi cỏ làm chậm", "Không có lý do gì"], e: "Hãy để đỡ đòn đi trước hoặc dùng chiêu thăm dò bụi." },
+        { q: "Bụi cỏ có thể dùng để làm gì?", a: "Ẩn mình để phục kích hoặc cắt đuôi kẻ đuổi theo", w: ["Hồi máu", "Mua đồ", "Tăng giáp"], e: "Đứng trong bụi, địch không thấy bạn nếu không có tầm nhìn vào bụi đó." },
+        { q: "Khi máu thấp và cần hồi phục, bạn nên làm gì?", a: "Lùi ra chỗ an toàn rồi dùng nút biến về nhà", w: ["Biến về ngay trước mặt địch", "Tiếp tục đánh", "Đứng giữa đường chờ hồi"], e: "Biến về cần vài giây đứng yên; bị đánh trúng sẽ bị hủy." },
+        { q: "Rời đường để đi hỗ trợ (roam), lúc nào là hợp lý?", a: "Sau khi đã đẩy lính đường mình vào trụ địch", w: ["Khi lính địch đang đẩy vào trụ mình", "Bất cứ lúc nào", "Khi máu còn 10%"], e: "Đẩy lính trước để không mất vàng, kinh nghiệm và không mất trụ khi bạn vắng mặt." },
+        { q: "Khi bị đuổi, chạy về hướng nào thường an toàn nhất?", a: "Về phía trụ nhà hoặc đồng đội", w: ["Vào sâu rừng địch", "Về phía trụ địch", "Đứng yên trong bụi gần địch"], e: "Trụ và đồng đội sẽ trừng phạt kẻ đuổi quá sâu." }
+      ]},
+      { id: "di-duong", label: "Đi đường & farm", questions: [
+        { q: "Muốn có nhiều vàng hơn đối thủ cùng đường, bạn nên tập kỹ năng gì?", a: "Last hit: ra đòn kết liễu lính đúng lúc", w: ["Đánh tướng địch liên tục", "Đứng trong bụi cả trận", "Về nhà thường xuyên"], e: "Chỉ đòn kết liễu mới cho đủ vàng từ lính, nên last hit đều tay tạo lợi thế lớn." },
+        { q: "Tướng đi rừng của địch biến mất khỏi bản đồ, bạn đang đi đường nên làm gì?", a: "Chơi cẩn thận, lùi gần trụ và báo cho đồng đội", w: ["Lao lên ép trụ địch", "Vào rừng địch tìm", "Bỏ qua, tiếp tục farm sát trụ địch"], e: "Đi rừng biến mất thường là đang chuẩn bị gank. Quan sát bản đồ nhỏ là kỹ năng giữ mạng quan trọng nhất." },
+        { q: "Vì sao nên thường xuyên nhìn bản đồ nhỏ?", a: "Để biết vị trí địch, đồng đội và kịp hỗ trợ hoặc né gank", w: ["Để tăng sát thương", "Vì game bắt buộc", "Để mua đồ nhanh hơn"], e: "Người chơi giỏi liếc bản đồ nhỏ vài giây một lần." },
+        { q: "Khi đối thủ cùng đường cúi xuống last hit lính, đó là cơ hội gì?", a: "Cấu máu đối thủ vì họ đang bận ăn lính", w: ["Về nhà mua đồ", "Bỏ đường đi rừng", "Không có cơ hội gì"], e: "Đổi máu đúng lúc khiến đối thủ phải chọn giữa vàng và máu." },
+        { q: "Đi đường dưới trụ khi bị áp đảo, cách chơi đúng là gì?", a: "Ăn lính an toàn dưới trụ và chờ đồng đội hỗ trợ", w: ["Lao ra đánh tay đôi", "Bỏ đường đi nơi khác", "AFK chờ hết trận"], e: "Giữ được kinh nghiệm và vàng dưới trụ là đủ để không bị bỏ xa." },
+        { q: "Người đi rừng nên chọn thứ tự dọn quái như thế nào?", a: "Theo lộ trình hợp lý, kết thúc gần đường có cơ hội gank", w: ["Ngẫu nhiên, gặp đâu đánh đó", "Chỉ đánh quái nhỏ", "Đứng chờ quái ở nhà"], e: "Lộ trình rừng tốt vừa farm nhanh vừa tạo áp lực đúng thời điểm." },
+        { q: "Vì sao không nên đuổi theo mạng quá sâu dưới trụ địch đầu trận?", a: "Trụ gây sát thương rất lớn, dễ đổi mạng hoặc chết oan", w: ["Vì trụ hồi máu cho bạn", "Vì không được phép", "Vì không có vàng"], e: "Lặn trụ đầu trận chỉ nên làm khi chắc chắn hạ được và có lính đỡ đòn trụ." },
+        { q: "Khi đẩy trụ địch, vì sao nên đi kèm lính?", a: "Để trụ bắn lính thay vì bắn tướng của bạn", w: ["Vì lính gây sát thương lớn nhất", "Vì không có lính thì trụ bất tử", "Không cần lính"], e: "Trụ ưu tiên bắn lính trong tầm, cho bạn thời gian an toàn để gây sát thương." }
+      ]},
+      { id: "giao-tranh", label: "Giao tranh tổng", questions: [
+        { q: "Trong giao tranh tổng, xạ thủ nên đứng ở đâu?", a: "Phía sau đỡ đòn, giữ khoảng cách và gây sát thương liên tục", w: ["Đứng đầu đội hình mở giao tranh", "Đứng xa ngoài tầm đánh", "Một mình đi đẩy đường khác"], e: "Xạ thủ máu mỏng nhưng sát thương cao, cần được đỡ đòn và trợ thủ bảo vệ." },
+        { q: "Nên ưu tiên hạ ai trước trong giao tranh?", a: "Xạ thủ, pháp sư gây sát thương chính của địch, nếu tiếp cận được an toàn", w: ["Luôn đánh đỡ đòn trước", "Người ở xa nhất", "Ai cũng được"], e: "Đánh đỡ đòn tốn thời gian; hạ nguồn sát thương chính giúp thắng nhanh." },
+        { q: "Đỡ đòn nên dùng chiêu khống chế khi nào?", a: "Khi đồng đội đủ gần để theo vào gây sát thương", w: ["Ngay khi thấy địch dù đồng đội ở xa", "Không bao giờ", "Sau khi giao tranh kết thúc"], e: "Khống chế không có sát thương theo sau thì phí cả chiêu lẫn mạng." },
+        { q: "Khi đội đang thiếu người (một người chết), bạn nên làm gì?", a: "Tránh giao tranh, thủ trụ chờ đủ người", w: ["Lao vào đánh 4 chọi 5", "Đi lấy mục tiêu lớn", "Chia nhau đẩy lẻ"], e: "Thiếu người mà vẫn đánh là cách nhanh nhất để thua cả giao tranh." },
+        { q: "Trợ thủ nên giữ chiêu khống chế để làm gì?", a: "Ngăn sát thủ địch lao vào xạ thủ của đội", w: ["Dọn quái rừng", "Đẩy lính", "Tung ra ngay đầu trận"], e: "Trợ thủ giỏi là người bảo vệ được carry khỏi pha cắt hậu." },
+        { q: "\"Tập trung sát thương\" (focus) trong giao tranh nghĩa là gì?", a: "Cả đội cùng đánh một mục tiêu để hạ nhanh", w: ["Mỗi người đánh một mục tiêu khác nhau", "Chỉ dùng đánh thường", "Đứng nhìn đồng đội đánh"], e: "Hạ một người nhanh tạo lợi thế quân số ngay trong giao tranh." },
+        { q: "Vừa thắng một pha giao tranh lớn, đội nên làm gì tiếp?", a: "Tận dụng lợi thế đẩy trụ hoặc lấy mục tiêu lớn", w: ["Ai về nhà nấy farm", "Đuổi theo địch vào tận nhà chính khi máu thấp", "Đứng yên chờ địch hồi sinh"], e: "Lợi thế quân số chỉ có giá trị khi được biến thành trụ và mục tiêu." },
+        { q: "Nên dùng Tốc biến thế nào cho hiệu quả?", a: "Giữ để thoát hiểm hoặc kết hợp chiêu áp sát", w: ["Dùng ngay khi hồi xong cho vui", "Chỉ dùng để chạy về nhà", "Không bao giờ dùng"], e: "Tốc biến hồi lâu, dùng phí một lần là mất một mạng tiềm năng." }
+      ]},
+      { id: "chien-thuat", label: "Chiến thuật & lên đồ", questions: [
+        { q: "Đội địch có nhiều pháp sư gây sát thương phép, bạn nên lên đồ thế nào?", a: "Thêm trang bị giáp phép", w: ["Chỉ lên giáp vật lý", "Bỏ hết đồ phòng thủ", "Không đổi gì"], e: "Lên đồ linh hoạt theo đội hình địch là khác biệt giữa người chơi trung bình và cao thủ." },
+        { q: "Đội địch có tướng hồi máu rất mạnh, bạn nên tính đến trang bị gì?", a: "Trang bị giảm hồi máu", w: ["Trang bị tăng tốc chạy", "Trang bị hồi máu cho mình", "Không cần gì"], e: "Giảm hồi máu khiến tướng hút máu hoặc hồi phục mất đi sức mạnh chính." },
+        { q: "Đội đang bị dẫn trước nhiều, cách chơi hợp lý là gì?", a: "Thủ trụ, farm an toàn và chờ địch mắc sai lầm", w: ["Một mình lao vào 5 người", "Đầu hàng ngay", "Chia nhau đi đẩy lẻ khắp nơi"], e: "Đội dẫn trước dễ chủ quan; một pha bắt lẻ đúng lúc có thể lật kèo." },
+        { q: "Trước khi đi lấy mục tiêu lớn như Rồng hay Tà Thần, đội nên làm gì?", a: "Kiểm tra vị trí địch, đảm bảo có tầm nhìn và lợi thế quân số", w: ["Đánh ngay dù không biết địch ở đâu", "Để một người đi một mình", "Đợi hết trận"], e: "Lấy mục tiêu khi địch đang rình là cách dễ bị cướp và thua giao tranh." },
+        { q: "Ở cuối trận, vì sao một pha chết đơn lẻ rất nguy hiểm?", a: "Thời gian hồi sinh dài, địch có thể đẩy thẳng vào nhà chính", w: ["Vì mất trang bị", "Vì bị trừ vàng rất nhiều", "Không nguy hiểm gì"], e: "Cuối trận, mỗi lần chết có thể quyết định cả trận đấu." },
+        { q: "\"Đẩy lẻ\" (split push) là chiến thuật gì?", a: "Một người đẩy đường xa, buộc địch chia lực lượng", w: ["Cả đội đi cùng một đường", "Chia vàng cho đồng đội", "Đổi đường liên tục"], e: "Hiệu quả với tướng đẩy trụ nhanh và chạy thoát tốt." },
+        { q: "Cách phối hợp với đồng đội nhanh nhất trong trận là gì?", a: "Dùng tín hiệu nhanh: tấn công, rút lui, tập trung", w: ["Gõ chữ thật dài", "Không nói gì", "Thoát game để nhắn tin"], e: "Tín hiệu nhanh không làm bạn mất tầm nhìn trận đấu như khi gõ chữ." },
+        { q: "Chọn tướng ở khung cấm chọn, điều gì quan trọng?", a: "Đội hình cân bằng: có đỡ đòn, sát thương phép và vật lý", w: ["Cả 5 người chọn xạ thủ", "Chọn tướng có trang phục đẹp nhất", "Không cần quan tâm đồng đội"], e: "Đội hình lệch một loại sát thương rất dễ bị khắc chế bằng trang bị." }
+      ]},
+      { id: "tinh-than", label: "Tư duy & tinh thần", questions: [
+        { q: "Thua liền nhiều trận rank, bạn nên làm gì?", a: "Nghỉ ngơi, bình tĩnh lại rồi mới chơi tiếp", w: ["Chơi tiếp liên tục để gỡ", "Đổ lỗi cho đồng đội", "Đổi tài khoản"], e: "Chơi khi đang cay cú thường dẫn tới chuỗi thua dài hơn." },
+        { q: "Đồng đội chơi kém, cách phản ứng tốt nhất là gì?", a: "Động viên hoặc im lặng, tập trung vào phần việc của mình", w: ["Chửi mắng trên kênh chat", "Cố tình feed", "Bỏ trận"], e: "Chat tiêu cực làm cả đội mất tinh thần và có thể bị báo cáo." },
+        { q: "Bị đối thủ khiêu khích trên kênh chat, bạn nên làm gì?", a: "Tắt chat với người đó và tiếp tục chơi", w: ["Cãi lại đến hết trận", "Đứng yên gõ chữ", "Thoát trận"], e: "Mỗi giây gõ chữ là một giây không nhìn trận đấu." },
+        { q: "Cách nhanh nhất để tiến bộ từ những trận thua là gì?", a: "Xem lại trận đấu để tìm lỗi của chính mình", w: ["Quên ngay trận thua", "Chỉ tìm lỗi đồng đội", "Đổi sang game khác"], e: "Nhận ra lỗi định vị hay lỗi lên đồ của bản thân giúp tiến bộ nhanh nhất." },
+        { q: "Vì sao nên chơi thành thạo vài tướng thay vì chơi mọi tướng?", a: "Nắm sâu combo, tầm chiêu và cách lên đồ của từng tướng", w: ["Vì game giới hạn số tướng", "Vì tướng khác không mạnh", "Không có lý do"], e: "Có vài tướng tủ cho mỗi vị trí giúp leo rank ổn định hơn." },
+        { q: "Khi đội đang thắng thế, sai lầm phổ biến nhất là gì?", a: "Chủ quan, đi lẻ và bị bắt", w: ["Đẩy trụ quá nhanh", "Đi cùng nhau", "Lấy mục tiêu lớn"], e: "Nhiều trận bị lật kèo chỉ vì một người thắng nhiều nên tự tin đi một mình." }
+      ]}
     ],
     emotions: [
       { q: "Cảm giác phổ biến nhất khi có đồng đội AFK giữa trận rank là gì?", a: "Bực bội, cảm thấy mất điểm oan", w: ["Vui mừng", "Không ai để ý", "Thấy dễ thắng hơn"], e: "Đây là nỗi ám ảnh lớn nhất của người chơi xếp hạng." },
@@ -353,17 +405,75 @@ const FILMS = [
       { q: "\"Loot\" là gì?", a: "Nhặt vũ khí, trang bị trên bản đồ", w: ["Bắn tỉa", "Lái xe", "Nhảy dù"], e: "Đầu trận ai loot nhanh hơn thường có lợi thế giao tranh." },
       { q: "\"Third party\" (bên thứ ba) là tình huống gì?", a: "Một đội tấn công hai đội đang đánh nhau", w: ["Mời thêm bạn vào đội", "Đổi bản đồ", "Hòa trận"], e: "Chờ hai đội đánh nhau rồi \"ngư ông đắc lợi\" là chiến thuật kinh điển." }
     ],
-    skills: [
-      { q: "Người mới nên chọn điểm nhảy như thế nào?", a: "Nơi ít người, hơi xa đường bay để nhặt đồ an toàn", w: ["Luôn nhảy Pochinki", "Nhảy ngay khi máy bay cất cánh vào giữa đám đông", "Nhảy xuống biển"], e: "Có đồ đầy đủ rồi mới giao tranh giúp người mới sống lâu và học được nhiều hơn." },
-      { q: "Muốn đáp đất nhanh nhất khi nhảy dù, bạn nên làm gì?", a: "Chúc đầu lao thẳng xuống trước khi mở dù", w: ["Mở dù ngay khi nhảy", "Bay ngang thật xa", "Đợi đến cuối đường bay"], e: "Đáp nhanh hơn đối thủ vài giây là có súng trước, rất quan trọng ở điểm đông người." },
-      { q: "Cách kiểm soát độ giật khi xả đạn liên tục là gì?", a: "Kéo tâm ngắm ngược xuống, gắn tay cầm và bù giật", w: ["Nhảy liên tục khi bắn", "Bắn mà không ngắm", "Bỏ hết phụ kiện"], e: "Tập kéo tâm ở bãi tập là cách nhanh nhất để bắn trúng ở tầm trung." },
-      { q: "Bị bắn tỉa giữa bãi trống, bạn nên làm gì?", a: "Chạy zigzag và tìm vật cản gần nhất", w: ["Đứng yên băng bó", "Chạy thẳng một đường", "Nằm xuống giữa bãi"], e: "Di chuyển khó đoán khiến tay bắn tỉa khó ngắm trúng." },
-      { q: "Chạy bo thế nào cho an toàn?", a: "Di chuyển sớm, chiếm vị trí tốt trong vùng an toàn trước người khác", w: ["Đợi bo sát lưng mới chạy", "Ở ngoài bo hồi máu", "Đi đường đông người cho nhanh"], e: "Vào bo muộn nghĩa là phải băng qua những đội đã chiếm sẵn chỗ nấp." },
-      { q: "Vì sao đeo tai nghe giúp chơi PUBG tốt hơn?", a: "Nghe rõ tiếng bước chân, tiếng súng và hướng của chúng", w: ["Tăng tốc độ chạy", "Tăng sát thương", "Hồi máu nhanh hơn"], e: "Âm thanh định hướng là nguồn thông tin quan trọng không kém tầm nhìn." },
-      { q: "Nghiêng người (peek) khi bắn từ sau vật cản có lợi gì?", a: "Lộ ít thân hình hơn, khó bị bắn trúng", w: ["Bắn nhanh gấp đôi", "Đạn xuyên tường", "Không bị mất máu"], e: "Peek trái phải từ sau tường, cây hay xe là kỹ năng cơ bản của đấu súng." },
-      { q: "Muốn cứu đồng đội bị gục giữa bãi trống, bạn nên làm gì trước?", a: "Ném lựu đạn khói để che tầm nhìn địch", w: ["Chạy thẳng tới cứu ngay", "Bỏ mặc đồng đội", "Ném lựu đạn nổ vào đồng đội"], e: "Khói là vật phẩm cứu mạng cả đội, nên luôn mang theo vài quả." },
-      { q: "Bắn tỉa một mục tiêu đang chạy ở xa, bạn cần làm gì?", a: "Ngắm đón trước hướng di chuyển và tính độ rơi của đạn", w: ["Ngắm thẳng vào người", "Ngắm phía sau mục tiêu", "Bắn lên trời"], e: "Trong PUBG đạn có thời gian bay và rơi theo khoảng cách, không trúng ngay lập tức." },
-      { q: "Vừa đáp đất, nên ưu tiên nhặt gì trước?", a: "Súng, giáp và mũ", w: ["Phụ kiện ống ngắm", "Trang phục", "Bình xăng"], e: "Có súng và đồ bảo hộ mới sống sót được giao tranh đầu tiên; phụ kiện có thể tìm sau." }
+    skillGroups: [
+      { id: "thao-tac", label: "Thao tác tay", questions: [
+        { q: "Trên PUBG Mobile, chơi \"4 ngón\" khác 2 ngón ở điểm nào?", a: "Vừa di chuyển, vừa xoay góc nhìn, vừa bắn và ngắm cùng lúc", w: ["Chỉ để bấm nhanh hơn nút nhặt đồ", "Không có khác biệt", "Chỉ dùng được trên máy tính bảng"], e: "Hai ngón trỏ đặt trên nút bắn, ngồi, nhảy giúp bạn không phải rời ngón cái khỏi cần di chuyển và góc nhìn." },
+        { q: "Con quay hồi chuyển (gyroscope) trên điện thoại giúp gì?", a: "Nghiêng điện thoại để ngắm và ghì tâm chính xác hơn", w: ["Tăng sát thương súng", "Tự động bắn", "Tăng tốc độ chạy"], e: "Nhiều người chơi PUBG Mobile giỏi bật gyro để kéo tâm bằng cổ tay thay vì ngón cái." },
+        { q: "Vì sao nhiều người đặt thêm nút bắn bên trái màn hình?", a: "Để tay trái bắn trong khi tay phải vẫn xoay góc nhìn, ghì tâm", w: ["Để bắn hai súng cùng lúc", "Vì nút bên phải bị lỗi", "Để nhặt đồ nhanh"], e: "Bố cục nút tùy chỉnh là bước đầu tiên khi muốn chơi nghiêm túc." },
+        { q: "Độ nhạy (sensitivity) nên chỉnh thế nào?", a: "Vừa đủ để xoay nhanh mà vẫn ghì tâm ổn định, rồi luyện cho quen", w: ["Luôn để cao nhất", "Luôn để thấp nhất", "Thay đổi mỗi trận"], e: "Không có con số đúng cho mọi người; quan trọng là giữ cố định để tay quen." },
+        { q: "Trên bản PC, phím Q và E dùng để làm gì?", a: "Nghiêng người sang trái và phải", w: ["Nhảy và ngồi", "Đổi súng", "Mở bản đồ"], e: "Nghiêng người giúp bắn từ sau vật cản mà chỉ lộ một phần cơ thể." },
+        { q: "Trên bản PC, giữ phím Alt để làm gì?", a: "Nhìn xung quanh tự do mà không đổi hướng chạy", w: ["Bắn nhanh hơn", "Hồi máu", "Ném lựu đạn"], e: "Vừa chạy vừa quan sát phía sau là kỹ năng rất có ích khi chạy bo." },
+        { q: "Trên bản PC, phím B dùng để làm gì?", a: "Đổi chế độ bắn: phát một, loạt hoặc liên thanh", w: ["Mở ba lô", "Mở dù", "Lên xe"], e: "Bắn phát một ở tầm xa giúp đạn chụm hơn so với xả liên tục." },
+        { q: "Trước khi vào trận, bạn nên luyện thao tác ở đâu?", a: "Bãi tập (Training) để thử súng, phụ kiện và độ giật", w: ["Vào trận xếp hạng luôn", "Chỉ xem video", "Không cần luyện"], e: "Vài phút khởi động ở bãi tập giúp tay vào nhịp trước khi đấu súng thật." }
+      ]},
+      { id: "di-chuyen", label: "Di chuyển & ẩn nấp", questions: [
+        { q: "Bị bắn tỉa giữa bãi trống, bạn nên làm gì?", a: "Chạy zigzag và tìm vật cản gần nhất", w: ["Đứng yên băng bó", "Chạy thẳng một đường", "Nằm xuống giữa bãi"], e: "Di chuyển khó đoán khiến tay bắn tỉa khó ngắm trúng." },
+        { q: "Đi bộ chậm (thay vì chạy) có lợi gì?", a: "Tiếng bước chân nhỏ hơn, khó bị phát hiện", w: ["Tăng máu", "Bắn chính xác hơn khi chạy", "Không có lợi gì"], e: "Khi tiếp cận nhà có địch, đi chậm giúp bạn không lộ vị trí." },
+        { q: "Ngồi hoặc nằm khi bắn giúp gì?", a: "Giảm độ giật và thu nhỏ hình dáng, khó bị bắn trúng", w: ["Tăng tốc chạy", "Hồi máu nhanh", "Tăng sát thương"], e: "Nằm bắn ở tầm xa rất chính xác, nhưng di chuyển chậm khi bị phát hiện." },
+        { q: "Trèo, vượt qua tường thấp và cửa sổ giúp gì khi di chuyển?", a: "Đổi hướng nhanh, thoát khỏi tầm bắn và tạo góc bất ngờ", w: ["Hồi máu", "Mở thùng thính", "Không có tác dụng"], e: "Dùng địa hình linh hoạt khiến đối thủ khó đoán vị trí của bạn." },
+        { q: "Khi lái xe gặp phục kích, nên làm gì?", a: "Dừng xe làm vật chắn rồi nhảy xuống phía bên kia", w: ["Ngồi trên xe bắn trả", "Tắt máy ngồi yên", "Lái thẳng vào địch"], e: "Xe là chỗ nấp tạm thời, nhưng xe bốc cháy sẽ nổ nên đừng nấp quá lâu." },
+        { q: "Vì sao không nên đứng mãi trên đỉnh đồi trơ trọi?", a: "Bị nhìn thấy từ mọi hướng, dễ bị bắn", w: ["Vì bị mất máu", "Vì không thấy gì", "Vì bo luôn tránh đồi"], e: "Đỉnh đồi có tầm nhìn tốt nhưng cần đá, cây hoặc dốc để che chắn." },
+        { q: "Di chuyển trong nhà có địch, góc nào nguy hiểm nhất?", a: "Cầu thang và cửa ra vào", w: ["Giữa phòng trống không có ai", "Mái nhà xa", "Bãi đỗ xe"], e: "Đối thủ thường canh sẵn cầu thang và cửa; ném lựu đạn hoặc choáng trước khi vào." },
+        { q: "Khi chạy giữa hai chỗ nấp, điều nên làm là gì?", a: "Chọn quãng chạy ngắn nhất và quan sát trước khi chạy", w: ["Chạy chỗ trống dài nhất", "Vừa chạy vừa hồi máu", "Nhảy liên tục giữa bãi trống"], e: "Mỗi giây ở chỗ trống là một giây đối thủ có thể bắn bạn." }
+      ]},
+      { id: "nhay-du", label: "Nhảy dù & điểm đáp", questions: [
+        { q: "Người mới nên chọn điểm nhảy như thế nào?", a: "Nơi ít người, hơi xa đường bay để nhặt đồ an toàn", w: ["Luôn nhảy Pochinki", "Nhảy ngay khi máy bay cất cánh vào giữa đám đông", "Nhảy xuống biển"], e: "Có đồ đầy đủ rồi mới giao tranh giúp người mới sống lâu và học được nhiều hơn." },
+        { q: "Muốn đáp đất nhanh nhất khi nhảy dù, bạn nên làm gì?", a: "Chúc đầu lao thẳng xuống trước khi mở dù", w: ["Mở dù ngay khi nhảy", "Bay ngang thật xa", "Đợi đến cuối đường bay"], e: "Đáp nhanh hơn đối thủ vài giây là có súng trước, rất quan trọng ở điểm đông người." },
+        { q: "Muốn bay đến điểm xa đường bay, bạn nên làm gì?", a: "Nhảy sớm hơn và giữ tư thế lướt, mở dù sớm để bay xa", w: ["Chúc thẳng xuống", "Nhảy ở cuối đường bay", "Không mở dù"], e: "Lướt ngang và mở dù sớm cho quãng bay xa hơn rất nhiều." },
+        { q: "Khi đang bay xuống, nên quan sát điều gì?", a: "Số người đáp xung quanh để tránh hoặc chuẩn bị giao tranh", w: ["Màu dù của đồng đội", "Bầu trời", "Không cần quan sát"], e: "Biết có bao nhiêu đội đáp gần giúp bạn quyết định nhặt đồ nhanh hay chuyển điểm." },
+        { q: "Trong chế độ đội, vì sao nên đáp gần nhau?", a: "Để hỗ trợ và cứu nhau khi giao tranh đầu trận", w: ["Để chia đồ ít hơn", "Không cần thiết", "Để bị địch bắn cùng lúc"], e: "Đội đáp rời rạc rất dễ bị hạ lẻ từng người." },
+        { q: "Vừa đáp đất, nên ưu tiên nhặt gì trước?", a: "Súng, giáp và mũ", w: ["Phụ kiện ống ngắm", "Trang phục", "Bình xăng"], e: "Có súng và đồ bảo hộ mới sống sót được giao tranh đầu tiên; phụ kiện có thể tìm sau." },
+        { q: "Đáp xuống mái nhà có lợi gì?", a: "Vào nhà nhanh và có vị trí cao để quan sát", w: ["Có thùng thính trên mái", "Không bị bo đuổi", "Mái nhà hồi máu"], e: "Mái nhà và ban công cho phép đáp nhanh rồi vào trong nhặt đồ ngay." },
+        { q: "Đáp xuống mà chỉ thấy địch đã có súng, bạn không có, nên làm gì?", a: "Tránh đối đầu, chạy sang nhà khác tìm súng", w: ["Lao vào đấm tay không", "Đứng yên chờ", "Nhảy lại lên máy bay"], e: "Sống sót để có súng quan trọng hơn liều mạng đầu trận." }
+      ]},
+      { id: "ban-sung", label: "Bắn súng & ngắm", questions: [
+        { q: "Cách kiểm soát độ giật khi xả đạn liên tục là gì?", a: "Kéo tâm ngắm ngược xuống, gắn tay cầm và bù giật", w: ["Nhảy liên tục khi bắn", "Bắn mà không ngắm", "Bỏ hết phụ kiện"], e: "Tập kéo tâm ở bãi tập là cách nhanh nhất để bắn trúng ở tầm trung." },
+        { q: "Bắn tỉa một mục tiêu đang chạy ở xa, bạn cần làm gì?", a: "Ngắm đón trước hướng di chuyển và tính độ rơi của đạn", w: ["Ngắm thẳng vào người", "Ngắm phía sau mục tiêu", "Bắn lên trời"], e: "Trong PUBG đạn có thời gian bay và rơi theo khoảng cách, không trúng ngay lập tức." },
+        { q: "Ống ngắm nào hợp với cận chiến trong nhà?", a: "Red dot hoặc Holo", w: ["Ống 8x", "Ống 15x", "Không dùng ngắm"], e: "Ống phóng đại cao làm tầm nhìn hẹp, khó theo mục tiêu ở gần." },
+        { q: "Ở tầm xa, bắn từng phát (tap) thay vì xả liên tục giúp gì?", a: "Đạn chụm hơn vì độ giật không kịp cộng dồn", w: ["Tăng sát thương mỗi viên", "Tiết kiệm thời gian nạp đạn", "Không có tác dụng"], e: "Xả liên thanh ở tầm xa phần lớn đạn sẽ bay lệch." },
+        { q: "Vì sao nên ngắm vào tầm đầu?", a: "Headshot gây sát thương lớn nhất, hạ địch nhanh hơn", w: ["Vì chân không nhận sát thương", "Vì mũ không có tác dụng", "Không cần ngắm đầu"], e: "Để tâm ngắm sẵn ngang tầm đầu khi di chuyển giúp phản ứng nhanh hơn." },
+        { q: "Súng dùng đạn 7.62mm thường khác đạn 5.56mm thế nào?", a: "Sát thương cao hơn nhưng giật mạnh hơn, khó kiểm soát", w: ["Sát thương thấp hơn và không giật", "Giống hệt nhau", "Chỉ dùng cho súng ngắn"], e: "AKM mạnh nhưng giật; M416 nhẹ đô nhưng dễ kiểm soát hơn." },
+        { q: "Khi đối đầu cự ly gần, nên ngắm bắn kiểu nào?", a: "Bắn không mở ống (hip fire) hoặc ngắm nhanh, kết hợp nghiêng và di chuyển", w: ["Mở ống 8x", "Đứng yên ngắm thật lâu", "Ném băng gạc"], e: "Ở rất gần, tốc độ phản ứng quan trọng hơn độ chính xác tuyệt đối." },
+        { q: "Hết đạn giữa giao tranh, nên làm gì?", a: "Đổi sang súng phụ thay vì nạp đạn khi địch đang bắn", w: ["Đứng yên nạp đạn", "Chạy thẳng vào địch", "Nhặt đồ"], e: "Đổi súng nhanh hơn nạp đạn; nạp đạn chỉ khi đã có chỗ nấp an toàn." }
+      ]},
+      { id: "vi-tri", label: "Chạy bo & vị trí", questions: [
+        { q: "Chạy bo thế nào cho an toàn?", a: "Di chuyển sớm, chiếm vị trí tốt trong vùng an toàn trước người khác", w: ["Đợi bo sát lưng mới chạy", "Ở ngoài bo hồi máu", "Đi đường đông người cho nhanh"], e: "Vào bo muộn nghĩa là phải băng qua những đội đã chiếm sẵn chỗ nấp." },
+        { q: "Đi dọc mép bo có lợi gì?", a: "Chỉ phải lo địch ở một phía, phía sau là vùng ngoài bo", w: ["Bo hồi máu", "Không ai thấy bạn", "Có nhiều đồ hơn"], e: "Mép bo hạn chế hướng bị tấn công, nhưng cần theo dõi bo thu hẹp." },
+        { q: "Vì sao vị trí trên cao (high ground) có lợi?", a: "Nhìn được nhiều hơn và địch khó bắn trúng bạn", w: ["Bo không thu vào chỗ cao", "Tăng sát thương súng", "Không có lợi"], e: "Đứng cao giúp phát hiện địch sớm, nhưng cần vật che chắn." },
+        { q: "Ở những vòng bo cuối, cách ẩn nấp phổ biến là gì?", a: "Nằm sát mặt đất, sau đá hoặc dốc, hạn chế bắn lộ vị trí", w: ["Chạy liên tục giữa bãi trống", "Đứng trên nóc xe", "Bắn mọi thứ nhìn thấy"], e: "Ở bo cuối, đội nào lộ vị trí trước thường bị loại trước." },
+        { q: "Khi hai đội đang đấu súng gần bạn, bạn nên làm gì?", a: "Quan sát, chờ thời điểm rồi tấn công đội còn lại", w: ["Lao vào giữa hai đội", "Đứng giữa bãi để cổ vũ", "Bỏ chạy ra ngoài bo"], e: "Làm bên thứ ba đúng lúc giúp hạ được đội đã bị mất máu." },
+        { q: "Nên bắt đầu chạy bo khi nào nếu ở xa vùng an toàn?", a: "Sớm, trước khi bo bắt đầu thu hẹp", w: ["Khi bo chạm lưng", "Không cần chạy", "Khi còn 10 người"], e: "Ở xa bo mà chạy muộn sẽ vừa mất máu vừa phải băng qua chỗ trống." },
+        { q: "Nếu bị kẹt ngoài bo, ưu tiên điều gì?", a: "Dùng đồ tăng lực, hồi máu và chạy thẳng vào vùng an toàn", w: ["Ngồi lại nhặt đồ", "Đánh nhau với người khác ngoài bo", "Đứng yên chờ bo tới"], e: "Đồ tăng lực vừa hồi máu dần vừa giúp chạy nhanh hơn." },
+        { q: "Nhà trong bo cuối (\"nhà bo\") có ưu và nhược điểm gì?", a: "Chỗ nấp tốt, nhưng bị nhiều đội vây quanh khi bo thu", w: ["Không có nhược điểm", "Không có ưu điểm", "Nhà bo luôn có thùng thính"], e: "Giữ nhà bo cần đủ đạn, lựu đạn và khói để thoát khi cần." }
+      ]},
+      { id: "vat-pham", label: "Hồi máu & vật phẩm", questions: [
+        { q: "Muốn cứu đồng đội bị gục giữa bãi trống, bạn nên làm gì trước?", a: "Ném lựu đạn khói để che tầm nhìn địch", w: ["Chạy thẳng tới cứu ngay", "Bỏ mặc đồng đội", "Ném lựu đạn nổ vào đồng đội"], e: "Khói là vật phẩm cứu mạng cả đội, nên luôn mang theo vài quả." },
+        { q: "Nước tăng lực và thuốc giảm đau có tác dụng gì?", a: "Tăng thanh năng lượng: hồi máu dần, mức cao còn tăng tốc chạy", w: ["Hồi đầy máu ngay", "Tăng giáp", "Tăng sát thương súng"], e: "Dùng đồ tăng lực trước giao tranh giúp bạn có lợi thế máu." },
+        { q: "Lựu đạn choáng (flash) dùng tốt nhất khi nào?", a: "Ném vào phòng trước khi xông vào", w: ["Ném vào chính mình", "Ném ra bãi trống không có ai", "Không bao giờ dùng"], e: "Địch bị choáng mất tầm nhìn vài giây, đủ để bạn hạ họ." },
+        { q: "Bình xăng cháy (molotov) hữu ích nhất khi nào?", a: "Ép địch ra khỏi góc nấp hoặc phòng kín", w: ["Hồi máu cho đồng đội", "Sửa xe", "Ném để soi đường"], e: "Lửa gây sát thương theo thời gian, buộc đối thủ phải rời vị trí." },
+        { q: "Vì sao không nên hồi máu ở chỗ trống?", a: "Hồi máu tốn thời gian và bạn không thể bắn trả", w: ["Vì không hồi được", "Vì tốn đạn", "Vì làm mất giáp"], e: "Luôn nấp sau vật cản trước khi dùng hộp sơ cứu hay hộp y tế." },
+        { q: "Ba lô cấp cao (cấp 3) có lợi gì?", a: "Mang được nhiều đạn, vật phẩm hồi máu và lựu đạn hơn", w: ["Chặn đạn từ phía sau như chảo", "Tăng tốc chạy", "Hồi máu"], e: "Ba lô quyết định bạn mang được bao nhiêu tài nguyên cho cuối trận." },
+        { q: "Cuối trận, nên mang theo những gì?", a: "Đủ đạn, đồ hồi máu, đồ tăng lực, lựu đạn và khói", w: ["Chỉ súng, không cần gì khác", "Thật nhiều phụ kiện thừa", "Chỉ quần áo"], e: "Thiếu khói hoặc lựu đạn ở bo cuối khiến bạn không có cách xử lý tình huống." },
+        { q: "Giáp đã bị bắn hỏng nặng, nên làm gì khi gặp giáp mới cùng cấp?", a: "Đổi sang giáp mới vì độ bền đầy hơn", w: ["Giữ giáp cũ cho kỷ niệm", "Bỏ giáp luôn", "Không có khác biệt"], e: "Giáp càng hỏng thì giảm sát thương càng kém hiệu quả." }
+      ]},
+      { id: "dong-doi", label: "Phối hợp đồng đội", questions: [
+        { q: "Báo hướng địch cho đồng đội chính xác nhất bằng cách nào?", a: "Đọc số độ trên la bàn (ví dụ: địch hướng 270)", w: ["Nói \"đằng kia kìa\"", "Nói \"bên trái tôi\"", "Không cần báo"], e: "Mỗi người nhìn một hướng khác nhau nên \"bên trái\" không có ý nghĩa với đồng đội." },
+        { q: "Đánh dấu (ping) trên bản đồ hữu ích để làm gì?", a: "Chỉ điểm đến, vị trí địch và đồ cho cả đội cùng thấy", w: ["Gọi thùng thính", "Tăng sát thương", "Hồi máu đồng đội"], e: "Đánh dấu nhanh và rõ hơn nhiều so với giải thích bằng lời." },
+        { q: "Đồng đội bị gục ở chỗ trống và địch đang ngắm, bạn nên làm gì?", a: "Che khói rồi mới kéo hoặc cứu", w: ["Chạy tới cứu ngay", "Bỏ đi ngay", "Đứng cạnh đồng đội"], e: "Lao vào cứu khi chưa che chắn thường khiến cả hai cùng bị hạ." },
+        { q: "Cách chia đồ trong đội hợp lý là gì?", a: "Ưu tiên ống ngắm, đạn phù hợp cho người dùng súng đó", w: ["Ai nhặt được thì giữ hết", "Chia đều ngẫu nhiên", "Bỏ lại đồ thừa"], e: "Đưa ống 8x cho người cầm súng bắn tỉa hiệu quả hơn nhiều." },
+        { q: "Khi cả đội cùng tấn công một nhóm địch, điều quan trọng nhất là gì?", a: "Tấn công cùng lúc theo hiệu lệnh, không ai vào trước một mình", w: ["Mỗi người tự lao vào khi thích", "Một người đi trước, ba người chờ", "Đứng ở 4 nơi khác nhau"], e: "Đánh cùng lúc tạo lợi thế quân số ngay khi giao tranh bắt đầu." },
+        { q: "Vì sao không nên đứng chụm cả đội một chỗ trong bo cuối?", a: "Một quả lựu đạn có thể hạ cả đội", w: ["Vì đồng đội gây sát thương lên nhau", "Vì không được phép", "Không có lý do"], e: "Dàn trải vừa phải giúp quan sát nhiều hướng và tránh bị lựu đạn." }
+      ]}
     ],
     emotions: [
       { q: "Khoảnh khắc lên top 1 lần đầu tiên thường khiến người chơi cảm thấy thế nào?", a: "Run tay, vỡ òa và nhớ mãi", w: ["Thờ ơ", "Hối hận", "Thấy quá dễ"], e: "Nhiều người chụp màn hình \"Winner winner chicken dinner\" đầu tiên để khoe." },
@@ -383,17 +493,26 @@ const MODES = {
   facts: { suffix: "", label: "Kiến thức game", list: (f) => f.questions, src: (f) => f.sources },
   eps: { suffix: "--tung-tap", label: "Chi tiết trong game", list: (f) => f.episodes || [], src: (f) => f.epSources || [] },
   terms: { suffix: "--y-nghia", label: "Thuật ngữ game thủ", list: (f) => f.terms || [], src: (f) => f.termSources || [] },
-  skills: { suffix: "--ky-nang", label: "Kỹ năng chơi", list: (f) => f.skills || [], src: (f) => f.skillSources || [] },
+  skills: { suffix: "--ky-nang", label: "Kỹ năng chơi · tất cả", list: (f) => (f.skillGroups || []).flatMap((g) => g.questions.map((q) => ({ ...q, cat: g.label }))), src: (f) => f.skillSources || [] },
   emo: { suffix: "--cam-xuc", label: "Cảm xúc game thủ", list: (f) => f.emotions || [], src: (f) => f.emoSources || [] },
   all: {
     suffix: "--tong-hop", label: "Ôn tập tổng hợp",
     list: (f) => {
       const parts = ["facts", "eps", "terms", "skills", "emo"].filter((m) => MODES[m].list(f).length);
-      return parts.length > 1 ? parts.flatMap((m) => MODES[m].list(f).map((q) => ({ ...q, cat: labelOf(f, m) }))) : [];
+      return parts.length > 1 ? parts.flatMap((m) => MODES[m].list(f).map((q) => ({ ...q, cat: m === "skills" ? "Kỹ năng · " + q.cat : labelOf(f, m) }))) : [];
     },
     src: (f) => [...f.sources, ...(f.epSources || []), ...(f.termSources || []), ...(f.skillSources || []), ...(f.emoSources || [])].filter((s, i, a) => a.findIndex((x) => x[1] === s[1]) === i)
   }
 };
+// Mỗi nhóm kỹ năng (skillGroups) thành một bộ quiz riêng: #<game>--ky-nang-<nhóm>
+FILMS.forEach((f) => (f.skillGroups || []).forEach((g) => {
+  const m = "sk-" + g.id;
+  if (MODES[m]) return;
+  MODES[m] = { suffix: "--ky-nang-" + g.id, group: g.id, label: g.label,
+    list: (film) => ((film.skillGroups || []).find((x) => x.id === g.id) || { questions: [] }).questions,
+    src: (film) => film.skillSources || [] };
+}));
+const isSkill = (m) => m === "skills" || !!MODES[m].group;
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -402,10 +521,11 @@ const best = {
   get(id) { try { return Number(localStorage.getItem("best:" + id)) || 0; } catch { return 0; } },
   set(id, v) { try { if (v > this.get(id)) localStorage.setItem("best:" + id, v); } catch {} }
 };
-const labelOf = (f, m) => (m === "eps" && f.epLabel) || MODES[m].label;
+const labelOf = (f, m) => (m === "eps" && f.epLabel) || (MODES[m].group && ((f.skillGroups || []).find((g) => g.id === MODES[m].group) || {}).label) || MODES[m].label;
+const clsOf = (m) => (MODES[m].group ? "skills sub" : m);
 const keyOf = (film, mode) => film.id + MODES[mode].suffix;
 function parseKey(key) {
-  for (const mode of ["all", "eps", "emo", "skills", "terms", "facts"]) {
+  for (const mode of Object.keys(MODES).sort((a, b) => MODES[b].suffix.length - MODES[a].suffix.length)) {
     const sfx = MODES[mode].suffix;
     if (sfx && !key.endsWith(sfx)) continue;
     const film = FILMS.find((f) => f.id === key.slice(0, key.length - sfx.length));
@@ -418,13 +538,18 @@ let state = null;
 
 function renderShelf() {
   const films = FILMS.map((f) => {
-    const modes = Object.keys(MODES).filter((m) => MODES[m].list(f).length).map((m) => {
+    const btn = (m) => {
       const n = MODES[m].list(f).length, b = best.get(keyOf(f, m));
-      return `<button class="mode ${m}" data-key="${keyOf(f, m)}">
+      return `<button class="mode ${clsOf(m)}" data-key="${keyOf(f, m)}">
         <span class="mode-name">${labelOf(f, m)}</span>
         <span class="mode-meta">${n} câu${b ? ` · kỷ lục ${b}/${n}` : ""}</span>
       </button>`;
-    }).join("");
+    };
+    const groups = Object.keys(MODES).filter((m) => MODES[m].group && MODES[m].list(f).length);
+    const modes = Object.keys(MODES).filter((m) => !MODES[m].group && MODES[m].list(f).length).map((m) =>
+      m === "skills" && groups.length
+        ? `<span class="skillbox"><span class="label">Kỹ năng chơi · ${groups.length} nhóm</span>${groups.map(btn).join("")}${btn(m)}</span>`
+        : btn(m)).join("");
     return `<article class="film" data-film="${f.id}">
       <span class="poster" aria-hidden="true">${esc(f.motif)}</span>
       <span class="body">
@@ -474,7 +599,7 @@ function track() {
 
 function header() {
   const { film, mode } = state;
-  const switcher = Object.keys(MODES).filter((m) => m !== mode && MODES[m].list(film).length)
+  const switcher = Object.keys(MODES).filter((m) => m !== mode && MODES[m].list(film).length && (!MODES[m].group || isSkill(mode)))
     .map((m) => `<button class="switch" data-key="${keyOf(film, m)}">${labelOf(film, m)} →</button>`).join("");
   return `
     <div class="topbar">
@@ -484,7 +609,7 @@ function header() {
     <div class="hero">
       <span class="motif" aria-hidden="true">${esc(film.motif)}</span>
       <h1>${esc(film.title)}</h1>
-      <div class="hero-row"><span class="tag ${mode}">${labelOf(film, mode)}</span>${switcher}</div>
+      <div class="hero-row"><span class="tag ${clsOf(mode)}">${labelOf(film, mode)}</span>${switcher}</div>
     </div>
     ${track()}`;
 }
@@ -545,7 +670,7 @@ function verdict(r, mode) {
     if (r >= .5) return "Khá ổn. Vào kênh chat cộng đồng thêm vài hôm là thạo.";
     return "Còn nhiều tiếng lóng đang chờ bạn học.";
   }
-  if (mode === "skills") {
+  if (isSkill(mode)) {
     if (r === 1) return "Kỹ năng hoàn hảo. Bạn chơi như tuyển thủ chuyên nghiệp.";
     if (r >= .75) return "Rất chắc tay. Đồng đội nào cũng muốn ghép cặp với bạn.";
     if (r >= .5) return "Có nền tảng tốt. Áp dụng vài mẹo bên dưới là lên trình ngay.";
@@ -591,7 +716,7 @@ function renderFoot() {
   const src = state ? MODES[state.mode].src(state.film) : [];
   $("#foot").innerHTML = state
     ? `Nguồn dữ kiện: ${src.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(", ")}.`
-    : `Mỗi game có năm bộ câu hỏi (kiến thức game, chi tiết trong game, thuật ngữ game thủ, kỹ năng chơi, cảm xúc game thủ) và một mục ôn tập tổng hợp gộp tất cả. Kỷ lục chỉ lưu trên trình duyệt của bạn.`;
+    : `Mỗi game có các bộ câu hỏi kiến thức game, chi tiết trong game, thuật ngữ game thủ, cảm xúc game thủ, cùng phần kỹ năng chơi chia thành nhiều nhóm nhỏ (thao tác tay, di chuyển…) và một mục ôn tập tổng hợp gộp tất cả. Kỷ lục chỉ lưu trên trình duyệt của bạn.`;
 }
 
 function route() {
