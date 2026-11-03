@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Thư viện quiz kiến thức game, mở đầu với Liên Quân Mobile và PUBG.">
+<title>Đố Vui Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Oswald:wght@500;700&family=Baloo+2:wght@600;800&family=Roboto+Slab:wght@500;700&family=Playfair+Display:ital,wght@0,700;1,500;1,700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: một cột như tập kịch bản. Mỗi game mang bảng màu riêng (data-film), trang thư viện là sảnh chờ tối */
+:root, [data-film="home"] {
+  --bg: #15121b; --bg-art: radial-gradient(1200px 500px at 50% -10%, #3a2a4a66, transparent 70%);
+  --card: #1f1a27; --opt: #262030; --ink: #f4eff8; --muted: #a79fb4; --line: #342c40;
+  --accent: #ffb547; --accent-ink: #1a1305; --accent2: #ff6b6b;
+  --ok: #5fd0a0; --ok-soft: #173a2e; --no: #ff7a6b; --no-soft: #3d1d1c;
+  --display: "Fraunces", Georgia, serif;
+  color-scheme: dark;
+}
+.mode.terms { border-left: 4px solid var(--ok); }
+.mode.terms:hover { border-color: var(--ok); }
+.mode.all { border-left: 4px solid var(--ink); background: color-mix(in srgb, var(--accent) 10%, var(--opt)); }
+.mode.all:hover { border-color: var(--ink); }
+.tag.all { background: var(--ink); color: var(--card); }
+.cat { color: var(--muted); }
+.mode.eps { border-left: 4px solid var(--no); }
+.mode.eps:hover { border-color: var(--no); }
+.tag.eps { background: var(--no); color: var(--card); }
+.tag.terms { background: var(--ok); color: var(--card); }
+[data-film="lien-quan-mobile"] {
+  --bg: #0a1024;
+  --bg-art: radial-gradient(800px 420px at 85% -10%, #e9b94940, transparent 70%), radial-gradient(600px 420px at 0% 100%, #2f6bff33, transparent 70%);
+  --card: #111a35; --opt: #16213f; --ink: #f2f4fb; --muted: #9aa6c4; --line: #26345c;
+  --accent: #f0c04a; --accent-ink: #1a1404; --accent2: #4f8bff;
+  --ok: #4fd1a0; --ok-soft: #123329; --no: #ff6f6f; --no-soft: #3d1a20;
+  --display: "Baloo 2", "Trebuchet MS", sans-serif;
+  color-scheme: dark;
+}
+[data-film="pubg"] {
+  --bg: #13140f;
+  --bg-art: radial-gradient(800px 400px at 50% -10%, #f2a90038, transparent 70%), repeating-linear-gradient(135deg, #ffffff05 0 2px, transparent 2px 16px);
+  --card: #1c1e16; --opt: #24261c; --ink: #f3f1e6; --muted: #aaa892; --line: #393b2c;
+  --accent: #f2a900; --accent-ink: #161100; --accent2: #8fa35a;
+  --ok: #8fd36b; --ok-soft: #1f3317; --no: #ff6a4d; --no-soft: #3d1c14;
+  --display: "Oswald", "Arial Narrow", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0; min-height: 100vh;
+  background: var(--bg-art), var(--bg); background-attachment: fixed;
+  color: var(--ink); font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+  transition: background-color .4s, color .4s;
+}
+[hidden] { display: none !important; }
+.wrap { max-width: 720px; margin: 0 auto; display: grid; gap: 32px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.15; text-wrap: balance; margin: 0; }
+.label { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Masthead */
+.mast { display: grid; gap: 8px; }
+.mast h1 { font-size: clamp(36px, 8vw, 56px); font-family: "Fraunces", Georgia, serif; }
+.mast h1 em { font-style: italic; font-weight: 500; color: var(--accent); }
+.mast p { margin: 0; color: var(--muted); max-width: 56ch; }
+body:not([data-film="home"]) .mast { display: none; }
+
+/* Library: mỗi thẻ là một tấm poster nhỏ mang màu của game */
+.shelf { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.film {
+  position: relative; overflow: hidden; text-align: left; color: var(--ink);
+  background: var(--bg-art), var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 0; display: grid; grid-template-rows: auto 1fr; transition: transform .2s, box-shadow .2s;
+}
+.film:hover { transform: translateY(-3px); box-shadow: 0 14px 40px -18px var(--accent); }
+.film .poster {
+  height: 112px; display: grid; place-items: center; border-bottom: 1px solid var(--line);
+  font-family: var(--display); font-size: 40px; letter-spacing: .06em; color: var(--accent);
+  background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%), var(--opt);
+}
+.film .body { padding: 18px 20px 20px; display: grid; gap: 8px; align-content: start; }
+.film h3 { font-size: 23px; }
+.film .meta { font-size: 14px; color: var(--muted); }
+.film .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.pill { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--accent); color: var(--accent-ink); }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.film.soon { cursor: default; border-style: dashed; background: transparent; }
+.film.soon:hover { transform: none; box-shadow: none; }
+.film.soon .poster { color: var(--muted); background: transparent; font-size: 32px; }
+.film.soon h3 { color: var(--muted); font-weight: 500; font-style: italic; }
+
+/* Game */
+.game { display: grid; gap: 20px; }
+.hero { display: grid; gap: 6px; }
+.hero .motif { font-family: var(--display); color: var(--accent); font-size: 15px; letter-spacing: .2em; }
+.hero h1 { font-size: clamp(32px, 7vw, 48px); }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.back { background: none; border: 0; padding: 0; color: var(--muted); font-size: 14px; }
+.back:hover { color: var(--accent); }
+.track { display: grid; grid-auto-flow: column; gap: 3px; }
+.track span { height: 6px; border-radius: 3px; background: var(--line); }
+.track span.ok { background: var(--ok); }
+.track span.no { background: var(--no); }
+.track span.now { background: var(--accent); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: clamp(20px, 5vw, 36px); display: grid; gap: 20px; box-shadow: 0 20px 50px -30px color-mix(in srgb, var(--accent) 60%, transparent); }
+.qhead { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.num { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.score { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { font-size: clamp(22px, 4.5vw, 28px); }
+.opts { display: grid; gap: 10px; }
+.opt {
+  display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; text-align: left;
+  background: var(--opt); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; color: var(--ink);
+  transition: border-color .12s, background .12s, transform .12s;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); transform: translateX(2px); }
+.opt .key { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.right .key { background: var(--ok); border-color: var(--ok); color: var(--card); }
+.opt.wrong { border-color: var(--no); background: var(--no-soft); }
+.opt.wrong .key { background: var(--no); border-color: var(--no); color: var(--card); }
+.explain { border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 4px; }
+.explain strong { font-family: var(--display); font-size: 19px; }
+.explain.ok strong { color: var(--ok); }
+.explain.no strong { color: var(--no); }
+.explain p { margin: 0; color: var(--muted); }
+.actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.btn { border: 0; border-radius: 99px; padding: 11px 22px; background: var(--accent); color: var(--accent-ink); font-weight: 600; transition: filter .15s; }
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn.ghost:hover { border-color: var(--accent); }
+
+/* Result */
+.big { font-family: var(--display); font-size: clamp(64px, 16vw, 104px); line-height: 1; font-variant-numeric: tabular-nums; color: var(--accent); }
+.big small { font-size: .4em; color: var(--muted); font-weight: 500; }
+.verdict { font-family: var(--display); font-style: italic; font-size: 22px; margin: 0; }
+.review { display: grid; margin: 0; padding: 0; list-style: none; }
+.review li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.review li:last-child { border-bottom: 0; }
+.review .mark { font-family: "JetBrains Mono", ui-monospace, monospace; }
+.review .mark.ok { color: var(--ok); }
+.review .mark.no { color: var(--no); }
+.review .ans { color: var(--muted); }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+.foot a { color: var(--muted); }
+.modes { display: grid; gap: 8px; margin-top: 8px; }
+.mode {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; text-align: left;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 14px; background: var(--opt); color: var(--ink);
+  transition: border-color .15s, transform .15s;
+}
+.mode:hover { border-color: var(--accent); transform: translateX(2px); }
+.mode .mode-name { font-weight: 600; font-size: 15px; }
+.mode .mode-meta { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+.mode.facts { border-left: 4px solid var(--accent); }
+.mode.emo { border-left: 4px solid var(--accent2); }
+.mode.emo:hover { border-color: var(--accent2); }
+.hero-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+.tag { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; letter-spacing: .04em; padding: 4px 12px; border-radius: 99px; background: var(--accent); color: var(--accent-ink); }
+.tag.emo { background: var(--accent2); color: #ffffff; }
+.switch { background: none; border: 0; padding: 0; font-size: 14px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.switch:hover { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body data-film="home">
+
+<div class="wrap">
+  <header class="mast">
+    <span class="label">Thư viện câu đố game</span>
+    <h1>Đố Vui <em>Game</em></h1>
+    <p>Chọn một tựa game, trả lời từng câu và xem bạn hiểu game đến đâu. Mỗi đáp án đều có giải thích kèm theo.</p>
+  </header>
+
+  <section id="library" aria-label="Chọn game">
+    <div class="shelf" id="shelf"></div>
+  </section>
+
+  <section id="game" class="game" hidden aria-live="polite"></section>
+
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script>
+const FILMS = [
+  {
+    id: "lien-quan-mobile",
+    motif: "5 VS 5",
+    title: "Liên Quân Mobile",
+    original: "Arena of Valor · 2016",
+    meta: "MOBA 5v5 · TiMi Studio (Tencent) · Garena phát hành tại Việt Nam",
+    epLabel: "Tướng & trận đấu",
+    sources: [
+      ["Wikipedia: Arena of Valor", "https://en.wikipedia.org/wiki/Arena_of_Valor"],
+      ["Wikipedia: Honor of Kings", "https://en.wikipedia.org/wiki/Honor_of_Kings"],
+      ["Trang chủ Liên Quân Mobile", "https://lienquan.garena.vn/"]
+    ],
+    epSources: [
+      ["Trang chủ Liên Quân Mobile", "https://lienquan.garena.vn/"],
+      ["Wikipedia: Arena of Valor", "https://en.wikipedia.org/wiki/Arena_of_Valor"]
+    ],
+    termSources: [
+      ["Wikipedia: Multiplayer online battle arena", "https://en.wikipedia.org/wiki/Multiplayer_online_battle_arena"],
+      ["Wikipedia: Glossary of video game terms", "https://en.wikipedia.org/wiki/Glossary_of_video_game_terms"]
+    ],
+    emoSources: [
+      ["Wikipedia: Arena of Valor (đón nhận)", "https://en.wikipedia.org/wiki/Arena_of_Valor#Reception"]
+    ],
+    questions: [
+      { q: "Liên Quân Mobile thuộc thể loại game nào?", a: "MOBA (đấu trường trực tuyến nhiều người chơi)", w: ["Battle royale", "Bắn súng góc nhìn thứ nhất", "Nhập vai thế giới mở"], e: "Hai đội 5 người điều khiển tướng, cùng đẩy đường và phá nhà chính đối phương." },
+      { q: "Studio nào phát triển Liên Quân Mobile?", a: "TiMi Studio của Tencent", w: ["Riot Games", "Moonton", "Krafton"], e: "TiMi Studio (Tencent) phát triển game; Garena phát hành tại Việt Nam và nhiều nước Đông Nam Á." },
+      { q: "Ở Việt Nam, Liên Quân Mobile do công ty nào phát hành?", a: "Garena", w: ["VNG", "VTC Game", "Gamota"], e: "Tên đầy đủ quen thuộc là \"Garena Liên Quân Mobile\"." },
+      { q: "Liên Quân Mobile ra mắt tại Việt Nam vào năm nào?", a: "2016", w: ["2012", "2019", "2021"], e: "Game ra mắt người chơi Việt cuối năm 2016 và nhanh chóng trở thành MOBA di động phổ biến nhất." },
+      { q: "Tên quốc tế của Liên Quân Mobile là gì?", a: "Arena of Valor", w: ["Mobile Legends", "Wild Rift", "Heroes Evolved"], e: "Ở Đài Loan là Garena 傳說對決, ở Thái Lan là RoV, còn bản phương Tây gọi là Arena of Valor." },
+      { q: "Liên Quân Mobile được phát triển dựa trên game nào của Trung Quốc?", a: "Vương Giả Vinh Diệu (Honor of Kings)", w: ["Âm Dương Sư", "Thiện Nữ U Hồn", "Võ Lâm Truyền Kỳ"], e: "Arena of Valor là phiên bản quốc tế được làm lại từ Honor of Kings, ra mắt ở Trung Quốc năm 2015." },
+      { q: "Một trận đấu chính thức (chế độ xếp hạng) có bao nhiêu người chơi?", a: "10 người, chia thành hai đội 5 người", w: ["6 người, hai đội 3", "100 người, tự do", "8 người, hai đội 4"], e: "Bản đồ chính là 5v5 với ba đường và khu rừng ở giữa." },
+      { q: "Mục tiêu cuối cùng để giành chiến thắng là gì?", a: "Phá hủy nhà chính của đội đối phương", w: ["Hạ gục đủ 50 mạng", "Chiếm giữ trung tâm bản đồ 10 phút", "Là đội cuối cùng còn sống"], e: "Hạ mạng chỉ là phương tiện; trận đấu kết thúc khi nhà chính một bên bị phá." },
+      { q: "Bản đồ 5v5 chính của Liên Quân có mấy đường đánh?", a: "3 đường", w: ["1 đường", "2 đường", "5 đường"], e: "Đường trên, đường giữa, đường dưới, xen giữa là khu rừng có quái và bùa." },
+      { q: "Phép bổ trợ nào giúp tướng dịch chuyển tức thời một đoạn ngắn?", a: "Tốc biến", w: ["Trừng trị", "Cấp cứu", "Ngất ngư"], e: "Tốc biến là phép bổ trợ phổ biến nhất, dùng để thoát thân hoặc áp sát." },
+      { q: "Phép bổ trợ bắt buộc của người đi rừng là gì?", a: "Trừng trị", w: ["Tốc biến", "Thanh tẩy", "Gầm thét"], e: "Trừng trị gây sát thương lớn lên quái rừng, giúp đi rừng nhanh và tranh mục tiêu lớn." },
+      { q: "Giải đấu chuyên nghiệp Liên Quân lớn nhất Việt Nam tên là gì?", a: "Đấu Trường Danh Vọng (ĐTDV)", w: ["VCS", "Sao Thách Đấu", "PMPL"], e: "ĐTDV là giải đấu chuyên nghiệp hàng đầu, mỗi năm hai mùa Xuân và Đông." },
+      { q: "Liên Quân có hợp tác đưa nhóm siêu anh hùng nào vào game?", a: "Các siêu anh hùng DC như Batman, Superman, Wonder Woman", w: ["Biệt đội Avengers của Marvel", "Các nhân vật Pokémon", "Các nhân vật Dragon Ball"], e: "Batman, Superman, Wonder Woman, The Joker và The Flash đều là tướng có thể chơi trong Liên Quân." },
+      { q: "Đơn vị tiền tệ trong game mua được bằng tiền thật, dùng để mua trang phục là gì?", a: "Quân Huy", w: ["Vàng", "Kim Cương", "UC"], e: "Vàng kiếm được khi chơi, còn Quân Huy là đơn vị nạp. UC là tiền của PUBG Mobile." },
+      { q: "Chế độ \"Hỗn chiến\" khác bản đồ chính ở điểm nào?", a: "Chỉ có một đường và tướng được chọn ngẫu nhiên", w: ["Mỗi đội chỉ có 1 người", "Không có trụ", "Chơi với 100 người"], e: "Hỗn chiến là chế độ vui nhộn, giao tranh liên tục trên một con đường duy nhất." }
+    ],
+    episodes: [
+      { q: "Valhein thuộc vai trò nào?", a: "Xạ thủ", w: ["Đỡ đòn", "Trợ thủ", "Pháp sư"], e: "Valhein, thợ săn quỷ, là một trong những tướng đầu tiên người mới được làm quen." },
+      { q: "Butterfly nổi tiếng với lối chơi nào?", a: "Sát thủ, lao vào hạ gục mục tiêu và hồi chiêu khi ăn mạng", w: ["Đỡ đòn đứng trước team", "Hồi máu cho đồng đội", "Xả phép từ xa"], e: "Butterfly được hồi chiêu khi hạ gục hoặc hỗ trợ, nên có thể liên tục lao vào giao tranh." },
+      { q: "Krixi là tướng thuộc vai trò nào?", a: "Pháp sư", w: ["Xạ thủ", "Đấu sĩ", "Sát thủ"], e: "Krixi là tiên nữ dùng phép, gây sát thương phép từ xa, rất phổ biến với người mới." },
+      { q: "Thane thường đảm nhận vị trí nào trong đội?", a: "Đỡ đòn", w: ["Xạ thủ", "Pháp sư", "Sát thủ"], e: "Thane có lượng máu lớn và chiêu khống chế, đứng trước để che chắn cho đồng đội." },
+      { q: "Ngộ Không trong Liên Quân được lấy cảm hứng từ tác phẩm nào?", a: "Tây Du Ký", w: ["Tam Quốc Diễn Nghĩa", "Thủy Hử", "Phong Thần Bảng"], e: "Tôn Ngộ Không là sát thủ có thể tàng hình và gây sát thương chí mạng." },
+      { q: "Lữ Bố, Triệu Vân, Điêu Thuyền cùng xuất thân từ tác phẩm nào?", a: "Tam Quốc Diễn Nghĩa", w: ["Tây Du Ký", "Truyện Kiều", "Thủy Hử"], e: "Nhiều tướng Liên Quân mượn hình tượng nhân vật lịch sử, văn học Trung Hoa từ bản gốc Honor of Kings." },
+      { q: "Vai trò \"Trợ thủ\" chủ yếu làm gì?", a: "Bảo vệ, mở giao tranh và hỗ trợ đồng đội", w: ["Gây sát thương cao nhất đội", "Một mình farm rừng", "Đẩy trụ đường xa"], e: "Trợ thủ thường đi cùng xạ thủ đường rồng, cắm mắt và khống chế địch." },
+      { q: "Trong thi đấu, DSL là viết tắt chỉ đường nào?", a: "Đường Tà Thần (Dark Slayer Lane)", w: ["Đường giữa", "Khu rừng", "Đường rồng"], e: "DSL là đường gần mục tiêu lớn Tà Thần (Dark Slayer), thường dành cho đấu sĩ; ADL (Abyssal Dragon Lane) là đường rồng, thường dành cho xạ thủ." },
+      { q: "Người đi rừng chủ yếu hoạt động ở đâu đầu trận?", a: "Khu rừng giữa các đường, hạ quái và tìm cơ hội gank", w: ["Đứng cố định ở đường giữa", "Trong nhà chính", "Đi cùng xạ thủ suốt trận"], e: "Đi rừng lấy vàng từ quái rừng và di chuyển hỗ trợ các đường khi có thời cơ." },
+      { q: "\"Pentakill\" trong một trận Liên Quân nghĩa là gì?", a: "Một người hạ cả 5 tướng địch liên tiếp", w: ["Thắng 5 trận liên tiếp", "Phá 5 trụ", "Chết 5 lần"], e: "Pentakill là khoảnh khắc đáng nhớ nhất, game thông báo ngay trên màn hình." }
+    ],
+    terms: [
+      { q: "\"Gank\" nghĩa là gì?", a: "Bất ngờ đến đường khác để hỗ trợ hạ gục đối thủ", w: ["Mua đồ", "Đứng farm lính", "Thoát game"], e: "Đi rừng gank đường là cách tạo lợi thế sớm cho đồng đội." },
+      { q: "\"Feed\" là gì?", a: "Chết liên tục, tặng vàng và kinh nghiệm cho địch", w: ["Cho đồng đội vàng", "Ăn bùa xanh", "Nghỉ giữa trận"], e: "Một người feed nhiều có thể khiến tướng địch \"to\" vượt kiểm soát." },
+      { q: "\"Farm\" trong game MOBA là gì?", a: "Tiêu diệt lính và quái để kiếm vàng, kinh nghiệm", w: ["Phá trụ", "Trồng cây trong game", "Chơi một mình"], e: "Xạ thủ cần farm đủ để lên đồ cuối trận." },
+      { q: "\"Carry\" là người như thế nào?", a: "Người gánh team, gây sát thương chính để thắng", w: ["Người chỉ cắm mắt", "Người bỏ trận", "Người chơi lần đầu"], e: "Thường là xạ thủ hoặc sát thủ khi đã lên đủ đồ." },
+      { q: "\"AFK\" là viết tắt của cụm nào?", a: "Away From Keyboard: rời khỏi trận, không điều khiển", w: ["All For Kill", "Attack First Kill", "Army Force King"], e: "AFK khiến đội chỉ còn 4 người, và người AFK bị trừ điểm uy tín." },
+      { q: "\"Bùa xanh\" và \"bùa đỏ\" là gì?", a: "Hiệu ứng nhận được khi hạ quái rừng lớn", w: ["Hai loại trang phục", "Hai mức rank", "Vật phẩm mua bằng Quân Huy"], e: "Bùa xanh giảm hồi chiêu, hồi năng lượng; bùa đỏ thêm sát thương và làm chậm." },
+      { q: "\"Backdoor\" là chiến thuật gì?", a: "Lén phá trụ, nhà chính khi địch không phòng thủ", w: ["Rút về nhà hồi máu", "Đổi đường với đồng đội", "Mua đồ phòng thủ"], e: "Backdoor thành công có thể lật ngược cả trận đang thua." },
+      { q: "\"Meta\" nghĩa là gì?", a: "Những tướng, lối chơi mạnh và phổ biến nhất ở phiên bản hiện tại", w: ["Một tướng ẩn", "Tên bản đồ", "Chế độ chơi đơn"], e: "Meta thay đổi sau mỗi bản cập nhật cân bằng." },
+      { q: "\"Last hit\" là gì?", a: "Ra đòn kết liễu để nhận vàng từ lính hoặc quái", w: ["Đòn đầu tiên trong trận", "Chiêu cuối", "Lần chơi cuối"], e: "Last hit chuẩn giúp kiếm vàng nhanh hơn đối thủ cùng đường." },
+      { q: "\"GG\" cuối trận nghĩa là gì?", a: "Good Game: lời chào, ghi nhận trận đấu hay", w: ["Gà Gáy", "Go Go: đánh tiếp", "Get Gold"], e: "GG là phép lịch sự. Gõ GG khi trận chưa xong thường là ý muốn đầu hàng." }
+    ],
+    emotions: [
+      { q: "Cảm giác phổ biến nhất khi có đồng đội AFK giữa trận rank là gì?", a: "Bực bội, cảm thấy mất điểm oan", w: ["Vui mừng", "Không ai để ý", "Thấy dễ thắng hơn"], e: "Đây là nỗi ám ảnh lớn nhất của người chơi xếp hạng." },
+      { q: "Khi game ra trang phục mới cho tướng yêu thích, nhiều người thường làm gì?", a: "Tích Quân Huy hoặc săn sự kiện để sở hữu", w: ["Gỡ game", "Đổi sang tướng khác", "Không quan tâm"], e: "Trang phục là phần được cộng đồng bàn tán nhiều nhất mỗi đợt cập nhật." },
+      { q: "Vì sao Liên Quân gắn với tuổi thơ của nhiều học sinh Việt Nam?", a: "Game miễn phí, chạy trên điện thoại, dễ rủ bạn cùng chơi", w: ["Chỉ chơi được ở quán net", "Bắt buộc phải trả phí", "Chỉ có bản tiếng Anh"], e: "Từ 2017 trở đi, rủ nhau \"làm ván Liên Quân\" giờ ra chơi trở nên rất quen thuộc." },
+      { q: "Cảm xúc khi lật kèo thắng trận từ thế bị dẫn trước rất xa là gì?", a: "Phấn khích, nhớ mãi trận đấu đó", w: ["Chán nản", "Hối tiếc", "Buồn ngủ"], e: "Những pha lật kèo nhờ một giao tranh tổng là đặc sản của MOBA." },
+      { q: "Mỗi lần reset rank đầu mùa, người chơi thường cảm thấy thế nào?", a: "Vừa tiếc, vừa háo hức leo rank lại từ đầu", w: ["Luôn thấy dễ chịu", "Không ai biết có reset", "Chỉ thấy vui"], e: "Reset rank giúp tạo động lực chơi mỗi mùa mới." },
+      { q: "Khán giả theo dõi chung kết ĐTDV thường bày tỏ cảm xúc ra sao?", a: "Cổ vũ nhiệt tình như xem bóng đá", w: ["Im lặng tuyệt đối", "Không ai xem", "Chỉ xem phát lại"], e: "Các trận chung kết thu hút lượng người xem trực tiếp rất lớn trên các nền tảng livestream." },
+      { q: "Từ \"báo thủ\" được cộng đồng dùng để chỉ ai?", a: "Người chơi kém, làm hại đội mình", w: ["Người chơi giỏi nhất", "Người đưa tin trận đấu", "Bình luận viên"], e: "Một cách nói đùa, nửa than phiền, rất phổ biến trong game thủ Việt." },
+      { q: "Khi được đồng đội khen \"gánh còng lưng\", người chơi thường cảm thấy gì?", a: "Tự hào vì đã carry cả đội", w: ["Bị chê", "Bị phạt", "Muốn bỏ game"], e: "\"Gánh còng lưng\" là lời khen dành cho người một mình kéo cả đội đến chiến thắng." }
+    ]
+  },
+  {
+    id: "pubg",
+    motif: "100 → 1",
+    title: "PUBG",
+    original: "PlayerUnknown's Battlegrounds · 2017",
+    meta: "Battle royale · PUBG Studios (Krafton) · PC, console và PUBG Mobile",
+    epLabel: "Bản đồ & vũ khí",
+    sources: [
+      ["Wikipedia: PUBG: Battlegrounds", "https://en.wikipedia.org/wiki/PUBG:_Battlegrounds"],
+      ["Wikipedia: PUBG Mobile", "https://en.wikipedia.org/wiki/PUBG_Mobile"],
+      ["Wikipedia: Brendan Greene", "https://en.wikipedia.org/wiki/Brendan_Greene"]
+    ],
+    epSources: [
+      ["Wikipedia: PUBG: Battlegrounds", "https://en.wikipedia.org/wiki/PUBG:_Battlegrounds"],
+      ["PUBG Wiki (Fandom)", "https://pubg.fandom.com/wiki/PUBG_Wiki"]
+    ],
+    termSources: [
+      ["Wikipedia: Battle royale game", "https://en.wikipedia.org/wiki/Battle_royale_game"],
+      ["Wikipedia: PUBG Mobile", "https://en.wikipedia.org/wiki/PUBG_Mobile"]
+    ],
+    emoSources: [
+      ["Wikipedia: PUBG: Battlegrounds (đón nhận)", "https://en.wikipedia.org/wiki/PUBG:_Battlegrounds#Reception"]
+    ],
+    questions: [
+      { q: "PUBG là viết tắt của gì?", a: "PlayerUnknown's Battlegrounds", w: ["Players Ultimate Battle Game", "Pro Unit Battle Ground", "Public Battle Group"], e: "\"PlayerUnknown\" là biệt danh của nhà thiết kế Brendan Greene." },
+      { q: "PUBG thuộc thể loại game nào?", a: "Battle royale (sinh tồn, người cuối cùng chiến thắng)", w: ["MOBA", "Chiến thuật theo lượt", "Đua xe"], e: "Người chơi nhảy xuống đảo, nhặt đồ và chiến đấu đến khi chỉ còn một người hoặc một đội." },
+      { q: "Một trận PUBG tiêu chuẩn có tối đa bao nhiêu người chơi?", a: "100 người", w: ["10 người", "50 người", "200 người"], e: "100 người cùng bắt đầu trên một máy bay bay ngang bản đồ." },
+      { q: "Ai là người tạo ra lối chơi của PUBG?", a: "Brendan Greene", w: ["Hideo Kojima", "Markus Persson", "Gabe Newell"], e: "Ông từng làm các bản mod battle royale cho ARMA trước khi làm PUBG." },
+      { q: "PUBG bản PC ra mắt chính thức năm nào?", a: "2017", w: ["2012", "2015", "2020"], e: "Game mở truy cập sớm tháng 3/2017 và ra bản chính thức tháng 12/2017." },
+      { q: "Công ty mẹ của PUBG hiện nay là?", a: "Krafton (Hàn Quốc)", w: ["Tencent (Trung Quốc)", "Electronic Arts (Mỹ)", "Ubisoft (Pháp)"], e: "PUBG ban đầu do Bluehole phát triển; Bluehole sau đó đổi tên thành Krafton." },
+      { q: "Người chơi bắt đầu trận đấu bằng cách nào?", a: "Nhảy dù từ máy bay xuống bản đồ", w: ["Xuất hiện ngẫu nhiên trong nhà", "Đi thuyền vào đảo", "Chọn điểm hồi sinh"], e: "Chọn thời điểm nhảy và điểm đáp là quyết định chiến thuật đầu tiên." },
+      { q: "Câu chúc mừng khi giành top 1 trong PUBG là gì?", a: "Winner winner chicken dinner!", w: ["Victory royale!", "Game over!", "Ace!"], e: "Vì câu này mà game thủ Việt gọi top 1 là \"ăn gà\"." },
+      { q: "Vùng an toàn thu hẹp dần trong PUBG có tác dụng gì?", a: "Ép người chơi lại gần nhau, ai ở ngoài sẽ mất máu", w: ["Hồi máu cho người ở ngoài", "Tăng tốc xe", "Mở thêm thùng thính"], e: "Game thủ Việt gọi vùng này là \"bo\". Vòng bo càng về cuối càng nhỏ và gây sát thương mạnh." },
+      { q: "PUBG Mobile được phát triển với sự tham gia của công ty nào?", a: "Tencent (studio Lightspeed & Quantum)", w: ["Garena", "Moonton", "Activision"], e: "PUBG Mobile ra mắt năm 2018 và nhanh chóng trở thành một trong những game di động lớn nhất thế giới." },
+      { q: "Đơn vị tiền nạp trong PUBG Mobile là gì?", a: "UC (Unknown Cash)", w: ["Quân Huy", "Kim Cương", "V-Bucks"], e: "UC dùng để mua Royale Pass và trang phục. V-Bucks là của Fortnite." },
+      { q: "Từ năm 2022, PUBG bản PC chuyển sang mô hình nào?", a: "Miễn phí (free-to-play)", w: ["Thuê bao theo tháng", "Chỉ bán bản đĩa", "Ngừng phát hành"], e: "Từ tháng 1/2022, game đổi tên thành PUBG: Battlegrounds và cho chơi miễn phí." },
+      { q: "Cảm hứng cho thể loại battle royale một phần đến từ tác phẩm nào?", a: "Phim Nhật Bản Battle Royale (2000)", w: ["Phim Titanic", "Truyện Doraemon", "Phim Harry Potter"], e: "Bộ phim về học sinh buộc phải chiến đấu trên đảo đã đặt tên cho cả thể loại." },
+      { q: "Chế độ chơi đội phổ biến nhất trong PUBG có mấy người mỗi đội?", a: "4 người (Squad)", w: ["5 người", "6 người", "10 người"], e: "Ngoài Squad còn có Solo (1 người) và Duo (2 người)." },
+      { q: "Giải vô địch thế giới PUBG Mobile có tên viết tắt là gì?", a: "PMGC", w: ["AWC", "MSI", "TI"], e: "PUBG Mobile Global Championship. AWC là của Liên Quân, MSI của Liên Minh Huyền Thoại, TI của Dota 2." }
+    ],
+    episodes: [
+      { q: "Bản đồ đầu tiên và kinh điển nhất của PUBG là?", a: "Erangel", w: ["Miramar", "Sanhok", "Vikendi"], e: "Erangel rộng 8x8 km, có những địa danh nổi tiếng như Pochinki, School, Military Base." },
+      { q: "Miramar là bản đồ mang phong cách nào?", a: "Sa mạc", w: ["Rừng nhiệt đới", "Băng tuyết", "Thành phố tương lai"], e: "Miramar rộng 8x8 km với địa hình đồi cát và thị trấn kiểu Mỹ Latinh." },
+      { q: "Sanhok khác Erangel ở điểm nào nổi bật?", a: "Nhỏ hơn (4x4 km), là rừng nhiệt đới nên trận nhanh hơn", w: ["Rộng gấp đôi", "Không có nhà cửa", "Chỉ chơi ban đêm"], e: "Sanhok lấy cảm hứng từ Đông Nam Á, giao tranh dày đặc ngay từ đầu." },
+      { q: "Vikendi là bản đồ có khí hậu như thế nào?", a: "Băng tuyết", w: ["Sa mạc", "Đầm lầy", "Núi lửa"], e: "Trên tuyết, người chơi để lại dấu chân, nên khó ẩn nấp hơn." },
+      { q: "Pochinki nổi tiếng là nơi như thế nào trên Erangel?", a: "Thị trấn đông người nhảy, giao tranh rất sớm", w: ["Nơi không ai đến", "Căn cứ quân sự trên đảo", "Bãi biển hoang"], e: "Nhảy Pochinki là cách chơi \"máu lửa\" quen thuộc." },
+      { q: "Khẩu súng nào chỉ có trong thùng tiếp tế (thính)?", a: "AWM", w: ["M416", "AKM", "UMP45"], e: "AWM là súng bắn tỉa mạnh nhất, có thể hạ người đội mũ cấp 3 bằng một phát vào đầu." },
+      { q: "Vật dụng nào trong PUBG nổi tiếng vì đỡ được đạn?", a: "Chảo", w: ["Băng gạc", "Bình xăng", "Lựu đạn khói"], e: "Chảo đeo sau lưng có thể chặn đạn và là vũ khí cận chiến được yêu thích." },
+      { q: "M416 là loại súng gì?", a: "Súng trường tấn công", w: ["Súng bắn tỉa", "Súng ngắn", "Súng phóng lựu"], e: "M416 dùng đạn 5.56mm, dễ kiểm soát độ giật nên rất phổ biến." },
+      { q: "Vật phẩm nào hồi máu tối đa (về 100%)?", a: "Hộp y tế (Med Kit)", w: ["Băng gạc", "Nước tăng lực", "Thuốc giảm đau"], e: "Băng gạc và hộp sơ cứu chỉ hồi đến 75%; nước tăng lực, thuốc giảm đau là đồ tăng lực (boost)." },
+      { q: "\"Vùng đỏ\" trên bản đồ báo hiệu điều gì?", a: "Khu vực sắp bị không kích ném bom", w: ["Vùng an toàn cuối cùng", "Nơi có thùng thính", "Chỗ có xe"], e: "Đứng trong nhà là cách an toàn nhất khi vùng đỏ xuất hiện." }
+    ],
+    terms: [
+      { q: "\"Ăn gà\" nghĩa là gì?", a: "Giành top 1, sống sót cuối cùng", w: ["Bị hạ đầu tiên", "Nhặt được súng", "Thoát trận"], e: "Bắt nguồn từ câu \"Winner winner chicken dinner\"." },
+      { q: "\"Bo\" trong cách nói của game thủ Việt là gì?", a: "Vùng an toàn đang thu hẹp", w: ["Một loại súng", "Chiếc xe máy", "Đồng đội"], e: "\"Chạy bo\", \"nhà bo\" (nhà nằm trong vùng an toàn cuối) là những cụm quen thuộc." },
+      { q: "\"Thính\" là gì?", a: "Thùng tiếp tế thả từ máy bay", w: ["Một loại thuốc hồi máu", "Súng ngắn", "Chế độ chơi"], e: "Thùng thính chứa súng xịn, giáp và mũ cấp 3, nhưng cũng là mồi nhử." },
+      { q: "\"Camp\" nghĩa là gì?", a: "Nằm im một chỗ chờ đối thủ đến", w: ["Chạy liên tục", "Nhảy dù sớm", "Chơi một mình"], e: "Camp nhà hoặc bụi cỏ là lối chơi gây tranh cãi nhưng hiệu quả." },
+      { q: "\"Knock\" (đánh gục) trong chế độ đội khác gì hạ hẳn?", a: "Người bị gục bò được và có thể được đồng đội cứu dậy", w: ["Giống hệt bị hạ", "Hồi máu đầy ngay", "Được hồi sinh ở máy bay"], e: "Chỉ khi bị kết liễu hoặc hết máu ở trạng thái gục mới bị loại." },
+      { q: "\"Liếm hòm\" là hành động gì?", a: "Nhặt đồ từ hòm của người đã bị hạ", w: ["Mở thùng thính", "Phá cửa", "Sửa xe"], e: "Liếm hòm vội vàng giữa giao tranh là nguyên nhân bị hạ phổ biến." },
+      { q: "\"Rush\" trong PUBG là gì?", a: "Lao thẳng vào tấn công đối thủ", w: ["Nằm im", "Rút lui", "Đi nhặt đồ"], e: "Rush cần đồng đội phối hợp và lựu đạn, choáng hỗ trợ." },
+      { q: "\"Headshot\" là gì?", a: "Bắn trúng đầu, gây sát thương cao nhất", w: ["Bắn trúng chân", "Bắn trượt", "Ném lựu đạn"], e: "Mũ bảo hiểm cấp càng cao càng giảm sát thương từ headshot." },
+      { q: "\"Loot\" là gì?", a: "Nhặt vũ khí, trang bị trên bản đồ", w: ["Bắn tỉa", "Lái xe", "Nhảy dù"], e: "Đầu trận ai loot nhanh hơn thường có lợi thế giao tranh." },
+      { q: "\"Third party\" (bên thứ ba) là tình huống gì?", a: "Một đội tấn công hai đội đang đánh nhau", w: ["Mời thêm bạn vào đội", "Đổi bản đồ", "Hòa trận"], e: "Chờ hai đội đánh nhau rồi \"ngư ông đắc lợi\" là chiến thuật kinh điển." }
+    ],
+    emotions: [
+      { q: "Khoảnh khắc lên top 1 lần đầu tiên thường khiến người chơi cảm thấy thế nào?", a: "Run tay, vỡ òa và nhớ mãi", w: ["Thờ ơ", "Hối hận", "Thấy quá dễ"], e: "Nhiều người chụp màn hình \"Winner winner chicken dinner\" đầu tiên để khoe." },
+      { q: "Vì sao những phút cuối vòng bo thường rất căng thẳng?", a: "Vùng an toàn nhỏ, chỉ một sai lầm là bị loại", w: ["Vì game bị giật", "Vì hết đạn", "Vì không còn ai"], e: "Tiếng tim đập trong tai nghe là trải nghiệm chung của game thủ PUBG." },
+      { q: "Cảm giác khi bị hạ ngay sau khi đáp đất mà chưa nhặt được súng?", a: "Ức chế nhưng vẫn bấm chơi ván mới ngay", w: ["Vui sướng", "Tự hào", "Không cảm thấy gì"], e: "\"Chết trắng tay\" là chuyện ai cũng từng gặp." },
+      { q: "Năm 2017-2018, PUBG tạo ra hiện tượng gì trong cộng đồng game?", a: "Cơn sốt battle royale toàn cầu, nhiều game khác làm theo", w: ["Khiến mọi người bỏ chơi game", "Chỉ nổi tiếng ở Hàn Quốc", "Không ai biết đến"], e: "PUBG từng giữ kỷ lục số người chơi cùng lúc trên Steam, hơn 3 triệu người." },
+      { q: "Vấn đề nào khiến cộng đồng PUBG nhiều lần bức xúc?", a: "Hack, cheat làm mất công bằng", w: ["Game quá dễ", "Không có súng", "Bản đồ quá nhỏ"], e: "Nhà phát hành liên tục cấm hàng triệu tài khoản gian lận." },
+      { q: "Người chơi thường cảm thấy gì khi được đồng đội lao vào cứu dậy giữa làn đạn?", a: "Biết ơn, tin tưởng đồng đội hơn", w: ["Tức giận", "Muốn rời đội", "Không quan tâm"], e: "Những pha cứu đồng đội khiến chơi Squad với bạn bè trở nên gắn kết." },
+      { q: "Khi thấy thùng thính rơi gần, game thủ thường phân vân điều gì?", a: "Lấy đồ xịn hay sợ bị phục kích", w: ["Có nên gỡ game", "Có nên đổi bản đồ", "Có nên tắt âm thanh"], e: "Thính là phần thưởng lớn nhưng cũng là cái bẫy kinh điển." },
+      { q: "Vì sao PUBG Mobile phổ biến với giới trẻ Việt Nam?", a: "Chơi được trên điện thoại, dễ rủ bạn bè cùng đội", w: ["Chỉ chơi trên máy tính đắt tiền", "Bắt buộc trả phí", "Không có tiếng Việt"], e: "PUBG Mobile do VNG phát hành tại Việt Nam, có giao diện và sự kiện riêng cho người chơi Việt." }
+    ]
+  }
+];
+const COMING = ["Bạn muốn game nào tiếp theo?"];
+const KEYS = ["A", "B", "C", "D"];
+const MODES = {
+  facts: { suffix: "", label: "Kiến thức game", list: (f) => f.questions, src: (f) => f.sources },
+  eps: { suffix: "--tung-tap", label: "Chi tiết trong game", list: (f) => f.episodes || [], src: (f) => f.epSources || [] },
+  terms: { suffix: "--y-nghia", label: "Thuật ngữ game thủ", list: (f) => f.terms || [], src: (f) => f.termSources || [] },
+  emo: { suffix: "--cam-xuc", label: "Cảm xúc game thủ", list: (f) => f.emotions || [], src: (f) => f.emoSources || [] },
+  all: {
+    suffix: "--tong-hop", label: "Ôn tập tổng hợp",
+    list: (f) => {
+      const parts = ["facts", "eps", "terms", "emo"].filter((m) => MODES[m].list(f).length);
+      return parts.length > 1 ? parts.flatMap((m) => MODES[m].list(f).map((q) => ({ ...q, cat: labelOf(f, m) }))) : [];
+    },
+    src: (f) => [...f.sources, ...(f.epSources || []), ...(f.termSources || []), ...(f.emoSources || [])].filter((s, i, a) => a.findIndex((x) => x[1] === s[1]) === i)
+  }
+};
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const best = {
+  get(id) { try { return Number(localStorage.getItem("best:" + id)) || 0; } catch { return 0; } },
+  set(id, v) { try { if (v > this.get(id)) localStorage.setItem("best:" + id, v); } catch {} }
+};
+const labelOf = (f, m) => (m === "eps" && f.epLabel) || MODES[m].label;
+const keyOf = (film, mode) => film.id + MODES[mode].suffix;
+function parseKey(key) {
+  for (const mode of ["all", "eps", "emo", "terms", "facts"]) {
+    const sfx = MODES[mode].suffix;
+    if (sfx && !key.endsWith(sfx)) continue;
+    const film = FILMS.find((f) => f.id === key.slice(0, key.length - sfx.length));
+    if (film && MODES[mode].list(film).length) return { film, mode };
+  }
+  return null;
+}
+
+let state = null;
+
+function renderShelf() {
+  const films = FILMS.map((f) => {
+    const modes = Object.keys(MODES).filter((m) => MODES[m].list(f).length).map((m) => {
+      const n = MODES[m].list(f).length, b = best.get(keyOf(f, m));
+      return `<button class="mode ${m}" data-key="${keyOf(f, m)}">
+        <span class="mode-name">${labelOf(f, m)}</span>
+        <span class="mode-meta">${n} câu${b ? ` · kỷ lục ${b}/${n}` : ""}</span>
+      </button>`;
+    }).join("");
+    return `<article class="film" data-film="${f.id}">
+      <span class="poster" aria-hidden="true">${esc(f.motif)}</span>
+      <span class="body">
+        <span class="label">${esc(f.original)}</span>
+        <h3>${esc(f.title)}</h3>
+        <span class="meta">${esc(f.meta)}</span>
+        <span class="modes">${modes}</span>
+      </span>
+    </article>`;
+  }).join("");
+  const soon = COMING.map((t) => `<div class="film soon" aria-disabled="true"><span class="poster" aria-hidden="true">+</span><span class="body"><span class="label">Sắp có</span><h3>${esc(t)}</h3><span class="meta">Câu đố mới sẽ được thêm vào thư viện.</span></span></div>`).join("");
+  $("#shelf").innerHTML = films + soon;
+  $("#shelf").querySelectorAll(".mode[data-key]").forEach((el) => el.addEventListener("click", () => { location.hash = el.dataset.key; }));
+}
+
+function start(key) {
+  const p = parseKey(key);
+  if (!p) return showLibrary();
+  const { film, mode } = p;
+  const list = MODES[mode].list(film);
+  const qs = ((mode === "facts" && film.ordered) ? list : shuffle(list)).map((x) => ({ ...x, opts: shuffle([x.a, ...x.w]) }));
+  state = { film, mode, key, qs, i: 0, picks: [] };
+  document.body.dataset.film = film.id;
+  $("#library").hidden = true;
+  $("#game").hidden = false;
+  renderFoot();
+  renderQ();
+  window.scrollTo(0, 0);
+}
+
+function showLibrary() {
+  state = null;
+  document.body.dataset.film = "home";
+  $("#game").hidden = true;
+  $("#library").hidden = false;
+  renderShelf();
+  renderFoot();
+}
+
+function track() {
+  return `<div class="track" aria-hidden="true">${state.qs.map((q, k) => {
+    const p = state.picks[k];
+    const cls = p === undefined ? (k === state.i ? "now" : "") : (p === q.a ? "ok" : "no");
+    return `<span class="${cls}"></span>`;
+  }).join("")}</div>`;
+}
+
+function header() {
+  const { film, mode } = state;
+  const switcher = Object.keys(MODES).filter((m) => m !== mode && MODES[m].list(film).length)
+    .map((m) => `<button class="switch" data-key="${keyOf(film, m)}">${labelOf(film, m)} →</button>`).join("");
+  return `
+    <div class="topbar">
+      <button class="back" id="back">← Thư viện game</button>
+      <span class="label">${esc(film.original)}</span>
+    </div>
+    <div class="hero">
+      <span class="motif" aria-hidden="true">${esc(film.motif)}</span>
+      <h1>${esc(film.title)}</h1>
+      <div class="hero-row"><span class="tag ${mode}">${labelOf(film, mode)}</span>${switcher}</div>
+    </div>
+    ${track()}`;
+}
+
+function bindHeader() {
+  $("#back").addEventListener("click", () => { location.hash = ""; });
+  $("#game").querySelectorAll(".switch").forEach((b) => b.addEventListener("click", () => { location.hash = b.dataset.key; }));
+}
+
+function correct() { return state.picks.filter((p, k) => p === state.qs[k].a).length; }
+
+function renderQ() {
+  const { qs, i } = state;
+  const q = qs[i];
+  const picked = state.picks[i];
+  const done = picked !== undefined;
+  const ok = picked === q.a;
+  $("#game").innerHTML = `${header()}
+    <article class="card">
+      <div class="qhead"><span class="num">Câu ${String(i + 1).padStart(2, "0")} / ${qs.length}${q.cat ? ` · <span class="cat">${esc(q.cat)}</span>` : ""}</span><span class="score">Đúng ${correct()}</span></div>
+      <h2 class="q">${esc(q.q)}</h2>
+      <div class="opts">${q.opts.map((o, k) => {
+        let cls = "";
+        if (done && o === q.a) cls = "right";
+        else if (done && o === picked) cls = "wrong";
+        return `<button class="opt ${cls}" data-o="${esc(o)}" ${done ? "disabled" : ""}><span class="key">${KEYS[k]}</span><span>${esc(o)}</span></button>`;
+      }).join("")}</div>
+      ${done ? `<div class="explain ${ok ? "ok" : "no"}"><strong>${ok ? "Chính xác!" : "Chưa đúng. Đáp án: " + esc(q.a)}</strong><p>${esc(q.e)}</p></div>
+      <div class="actions"><button class="btn" id="next">${i + 1 < qs.length ? "Câu tiếp theo →" : "Xem kết quả"}</button></div>` : ""}
+    </article>`;
+  bindHeader();
+  $("#game").querySelectorAll(".opt:not(:disabled)").forEach((b) => b.addEventListener("click", () => pick(b.dataset.o)));
+  const nx = $("#next");
+  if (nx) { nx.addEventListener("click", next); nx.focus({ preventScroll: true }); }
+}
+
+function pick(o) {
+  if (state.picks[state.i] !== undefined) return;
+  state.picks[state.i] = o;
+  renderQ();
+}
+
+function next() {
+  if (state.i + 1 < state.qs.length) { state.i++; renderQ(); }
+  else renderResult();
+}
+
+function verdict(r, mode) {
+  if (mode === "all") {
+    if (r === 1) return "Hoàn hảo. Bạn nắm trọn tựa game này từ mọi góc nhìn.";
+    if (r >= .75) return "Rất vững. Chỉ còn vài chỗ cần ôn lại.";
+    if (r >= .5) return "Nắm được phần chính. Xem lại các câu sai bên dưới để ôn.";
+    return "Hãy làm lại từng bộ quiz nhỏ trước rồi quay lại ôn tổng hợp.";
+  }
+  if (mode === "terms") {
+    if (r === 1) return "Bạn nói chuyện như game thủ lâu năm.";
+    if (r >= .75) return "Rất thạo ngôn ngữ của cộng đồng game.";
+    if (r >= .5) return "Khá ổn. Vào kênh chat cộng đồng thêm vài hôm là thạo.";
+    return "Còn nhiều tiếng lóng đang chờ bạn học.";
+  }
+  if (mode === "emo") {
+    if (r === 1) return "Bạn hiểu game thủ đến từng nhịp tim.";
+    if (r >= .75) return "Bạn rất hiểu cộng đồng người chơi.";
+    if (r >= .5) return "Khá hiểu ý game thủ, thử lướt thêm vài group cộng đồng.";
+    return "Có vẻ bạn chơi một mình, chưa vào group nào.";
+  }
+  if (r === 1) return "Game thủ chính hiệu. Bạn nắm game đến từng chi tiết.";
+  if (r >= .75) return "Rất ấn tượng. Bạn đã chơi game này kỹ.";
+  if (r >= .5) return "Khá ổn. Chơi thêm vài mùa là thành cao thủ.";
+  return "Có lẽ đến lúc vào game cày thêm rồi.";
+}
+
+function renderResult() {
+  const { qs, key, mode } = state;
+  const c = correct();
+  best.set(key, c);
+  $("#game").innerHTML = `${header()}
+    <article class="card result">
+      <span class="label">Kết quả · ${labelOf(state.film, mode)}</span>
+      <div class="big">${c}<small> / ${qs.length}</small></div>
+      <p class="verdict">${verdict(c / qs.length, mode)}</p>
+      <ul class="review">${qs.map((q, k) => {
+        const ok = state.picks[k] === q.a;
+        return `<li><span class="mark ${ok ? "ok" : "no"}">${ok ? "✓" : "✗"}</span><span>${esc(q.q)}<br><span class="ans">${ok ? esc(q.a) : `Bạn chọn ${esc(state.picks[k])} · Đáp án ${esc(q.a)}`}</span></span></li>`;
+      }).join("")}</ul>
+      <div class="actions">
+        <button class="btn ghost" id="lib">Chọn game khác</button>
+        <button class="btn" id="again">Chơi lại</button>
+      </div>
+    </article>`;
+  bindHeader();
+  $("#lib").addEventListener("click", () => { location.hash = ""; });
+  $("#again").addEventListener("click", () => start(key));
+  window.scrollTo(0, 0);
+}
+
+function renderFoot() {
+  const src = state ? MODES[state.mode].src(state.film) : [];
+  $("#foot").innerHTML = state
+    ? `Nguồn dữ kiện: ${src.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(", ")}.`
+    : `Mỗi game có bốn bộ câu hỏi (kiến thức game, chi tiết trong game, thuật ngữ game thủ, cảm xúc game thủ) và một mục ôn tập tổng hợp gộp tất cả. Kỷ lục chỉ lưu trên trình duyệt của bạn.`;
+}
+
+function route() {
+  const key = location.hash.slice(1);
+  if (key && parseKey(key)) { if (!state || state.key !== key) start(key); }
+  else showLibrary();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (!state || $("#game").hidden) return;
+  const k = KEYS.indexOf(e.key.toUpperCase());
+  const btns = $("#game").querySelectorAll(".opt:not(:disabled)");
+  if (k >= 0 && btns[k]) btns[k].click();
+});
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
